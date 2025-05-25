@@ -8,7 +8,7 @@ cloud-config:
   enabled: true
   image:
     repository: sjbs0212/cloud-config
-    tag: "0.1.0"
+    tag: latest
   port: 9296
   env:
     SPRING_PROFILES_ACTIVE: "dev"
@@ -21,7 +21,7 @@ service-discovery:
   enabled: true
   image:
     repository: sjbs0212/service-discovery
-    tag: "0.1.0"
+    tag: latest
   port: 8761
   env:
     SPRING_PROFILES_ACTIVE: "dev"
@@ -31,7 +31,7 @@ api-gateway:
   enabled: true
   image:
     repository: sjbs0212/api-gateway
-    tag: "0.1.0"
+    tag: latest
   port: 8080
   env:
     SPRING_PROFILES_ACTIVE: "dev"
@@ -45,7 +45,7 @@ proxy-client:
   enabled: true
   image:
     repository: sjbs0212/proxy-client
-    tag: "0.1.0"
+    tag: latest
   port: 8900
   env:
     SPRING_PROFILES_ACTIVE: "dev"
@@ -59,7 +59,7 @@ frontend:
   enabled: true
   image:
     repository: sjbs0212/frontend
-    tag: "1.0"
+    tag: latest
   port: 80
   env:
     API_HOST: "api-gateway"
@@ -69,7 +69,7 @@ order-service:
   enabled: true
   image:
     repository: sjbs0212/order-service
-    tag: "0.1.0"
+    tag: latest
   port: 8300
   env:
     SPRING_PROFILES_ACTIVE: "dev"
@@ -83,7 +83,7 @@ payment-service:
   enabled: true
   image:
     repository: sjbs0212/payment-service
-    tag: "0.1.0"
+    tag: latest
   port: 8400
   env:
     SPRING_PROFILES_ACTIVE: "dev"
@@ -97,7 +97,7 @@ product-service:
   enabled: true
   image:
     repository: sjbs0212/product-service
-    tag: "0.1.0"
+    tag: latest
   port: 8500
   env:
     SPRING_PROFILES_ACTIVE: "dev"
@@ -111,7 +111,7 @@ shipping-service:
   enabled: true
   image:
     repository: sjbs0212/shipping-service
-    tag: "0.1.0"
+    tag: latest
   port: 8600
   env:
     SPRING_PROFILES_ACTIVE: "dev"
@@ -125,7 +125,7 @@ user-service:
   enabled: true
   image:
     repository: sjbs0212/user-service
-    tag: "0.1.0"
+    tag: latest
   port: 8700
   env:
     SPRING_PROFILES_ACTIVE: "dev"
@@ -139,7 +139,7 @@ favourite-service:
   enabled: true
   image:
     repository: sjbs0212/favourite-service
-    tag: "0.1.0"
+    tag: latest
   port: 8800
   env:
     SPRING_PROFILES_ACTIVE: "dev"
