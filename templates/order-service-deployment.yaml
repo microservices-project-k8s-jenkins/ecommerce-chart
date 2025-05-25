@@ -1,10 +1,10 @@
-{{- if .Values.order-service.enabled }}
+{{- if index .Values "order-service" "enabled" }}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: order-service
 spec:
-  replicas: {{ .Values.order-service.replicas }}
+  replicas: {{ index .Values "order-service" "replicas" }}
   selector:
     matchLabels:
       app: order-service
@@ -15,28 +15,28 @@ spec:
     spec:
       containers:
       - name: order-service
-        image: {{ .Values.order-service.image.repository }}:{{ .Values.order-service.image.tag }}
+        image: {{ index .Values "order-service" "image" "repository" }}:{{ index .Values "order-service" "image" "tag" }}
         ports:
-        - containerPort: {{ .Values.order-service.port }}
+        - containerPort: {{ index .Values "order-service" "port" }}
         env:
         - name: SPRING_PROFILES_ACTIVE
-          value: {{ .Values.order-service.env.SPRING_PROFILES_ACTIVE }}
+          value: {{ index .Values "order-service" "env" "SPRING_PROFILES_ACTIVE" }}
         - name: SPRING_ZIPKIN_BASE_URL
-          value: {{ .Values.order-service.env.SPRING_ZIPKIN_BASE_URL }}
+          value: {{ index .Values "order-service" "env" "SPRING_ZIPKIN_BASE_URL" }}
         - name: EUREKA_CLIENT_REGION
-          value: {{ .Values.order-service.env.EUREKA_CLIENT_REGION }}
+          value: {{ index .Values "order-service" "env" "EUREKA_CLIENT_REGION" }}
         - name: EUREKA_CLIENT_AVAILABILITYZONES_DEFAULT
-          value: {{ .Values.order-service.env.EUREKA_CLIENT_AVAILABILITYZONES_DEFAULT }}
+          value: {{ index .Values "order-service" "env" "EUREKA_CLIENT_AVAILABILITYZONES_DEFAULT" }}
         - name: EUREKA_CLIENT_SERVICEURL_MYZONE
-          value: {{ .Values.order-service.env.EUREKA_CLIENT_SERVICEURL_MYZONE }}
+          value: {{ index .Values "order-service" "env" "EUREKA_CLIENT_SERVICEURL_MYZONE" }}
         - name: EUREKA_CLIENT_SERVICEURL_DEFAULTZONE
-          value: {{ .Values.order-service.env.EUREKA_CLIENT_SERVICEURL_DEFAULTZONE }}
+          value: {{ index .Values "order-service" "env" "EUREKA_CLIENT_SERVICEURL_DEFAULTZONE" }}
         - name: SPRING_CONFIG_IMPORT
-          value: {{ .Values.order-service.env.SPRING_CONFIG_IMPORT }}
+          value: {{ index .Values "order-service" "env" "SPRING_CONFIG_IMPORT" }}
         livenessProbe:
           httpGet:
             path: /actuator/health
-            port: {{ .Values.order-service.port }}
+            port: {{ index .Values "order-service" "port" }}
           initialDelaySeconds: 30
           periodSeconds: 10
       initContainers:

@@ -1,4 +1,4 @@
-{{- if .Values.user-service.enabled }}
+{{- if index .Values "user-service" "enabled" }}
 apiVersion: v1
 kind: Service
 metadata:
@@ -7,7 +7,7 @@ spec:
   selector:
     app: user-service
   ports:
-  - port: {{ .Values.user-service.port }}
-    targetPort: {{ .Values.user-service.port }}
+    - port: {{ index .Values "user-service" "port" }}
+      targetPort: {{ index .Values "user-service" "port" }}
   type: ClusterIP
 {{- end }}

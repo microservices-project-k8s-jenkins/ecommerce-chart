@@ -1,10 +1,10 @@
-{{- if .Values.api-gateway.enabled }}
+{{- if index .Values "api-gateway" "enabled" }}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: api-gateway
 spec:
-  replicas: {{ .Values.api-gateway.replicas }}
+  replicas: {{ index .Values "api-gateway" "replicas" }}
   selector:
     matchLabels:
       app: api-gateway
@@ -15,28 +15,28 @@ spec:
     spec:
       containers:
       - name: api-gateway
-        image: {{ .Values.api-gateway.image.repository }}:{{ .Values.api-gateway.image.tag }}
+        image: {{ index .Values "api-gateway" "image" "repository" }}:{{ index .Values "api-gateway" "image" "tag" }}
         ports:
-        - containerPort: {{ .Values.api-gateway.port }}
+        - containerPort: {{ index .Values "api-gateway" "port" }}
         env:
         - name: SPRING_PROFILES_ACTIVE
-          value: {{ .Values.api-gateway.env.SPRING_PROFILES_ACTIVE }}
+          value: {{ index .Values "api-gateway" "env" "SPRING_PROFILES_ACTIVE" }}
         - name: SPRING_ZIPKIN_BASE_URL
-          value: {{ .Values.api-gateway.env.SPRING_ZIPKIN_BASE_URL }}
+          value: {{ index .Values "api-gateway" "env" "SPRING_ZIPKIN_BASE_URL" }}
         - name: EUREKA_CLIENT_REGION
-          value: {{ .Values.api-gateway.env.EUREKA_CLIENT_REGION }}
+          value: {{ index .Values "api-gateway" "env" "EUREKA_CLIENT_REGION" }}
         - name: EUREKA_CLIENT_AVAILABILITYZONES_DEFAULT
-          value: {{ .Values.api-gateway.env.EUREKA_CLIENT_AVAILABILITYZONES_DEFAULT }}
+          value: {{ index .Values "api-gateway" "env" "EUREKA_CLIENT_AVAILABILITYZONES_DEFAULT" }}
         - name: EUREKA_CLIENT_SERVICEURL_MYZONE
-          value: {{ .Values.api-gateway.env.EUREKA_CLIENT_SERVICEURL_MYZONE }}
+          value: {{ index .Values "api-gateway" "env" "EUREKA_CLIENT_SERVICEURL_MYZONE" }}
         - name: EUREKA_CLIENT_SERVICEURL_DEFAULTZONE
-          value: {{ .Values.api-gateway.env.EUREKA_CLIENT_SERVICEURL_DEFAULTZONE }}
+          value: {{ index .Values "api-gateway" "env" "EUREKA_CLIENT_SERVICEURL_DEFAULTZONE" }}
         - name: SPRING_CONFIG_IMPORT
-          value: {{ .Values.api-gateway.env.SPRING_CONFIG_IMPORT }}
+          value: {{ index .Values "api-gateway" "env" "SPRING_CONFIG_IMPORT" }}
         livenessProbe:
           httpGet:
             path: /actuator/health
-            port: {{ .Values.api-gateway.port }}
+            port: {{ index .Values "api-gateway" "port" }}
           initialDelaySeconds: 30
           periodSeconds: 10
       initContainers:

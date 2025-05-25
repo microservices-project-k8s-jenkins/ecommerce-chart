@@ -1,4 +1,4 @@
-{{- if .Values.favourite-service.enabled }}
+{{- if index .Values "favourite-service" "enabled" }}
 apiVersion: v1
 kind: Service
 metadata:
@@ -7,7 +7,7 @@ spec:
   selector:
     app: favourite-service
   ports:
-  - port: {{ .Values.favourite-service.port }}
-    targetPort: {{ .Values.favourite-service.port }}
+  - port: {{ index .Values "favourite-service" "port" }}
+    targetPort: {{ index .Values "favourite-service" "port" }}
   type: ClusterIP
 {{- end }}

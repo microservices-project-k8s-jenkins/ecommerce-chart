@@ -1,4 +1,4 @@
-{{- if .Values.payment-service.enabled }}
+{{- if index .Values "payment-service" "enabled" }}
 apiVersion: v1
 kind: Service
 metadata:
@@ -7,7 +7,7 @@ spec:
   selector:
     app: payment-service
   ports:
-  - port: {{ .Values.payment-service.port }}
-    targetPort: {{ .Values.payment-service.port }}
+  - port: {{ index .Values "payment-service" "port" }}
+    targetPort: {{ index .Values "payment-service" "port" }}
   type: ClusterIP
 {{- end }}

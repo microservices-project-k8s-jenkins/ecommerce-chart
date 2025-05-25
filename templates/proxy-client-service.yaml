@@ -1,4 +1,4 @@
-{{- if .Values.proxy-client.enabled }}
+{{- if index .Values "proxy-client" "enabled" }}
 apiVersion: v1
 kind: Service
 metadata:
@@ -7,7 +7,7 @@ spec:
   selector:
     app: proxy-client
   ports:
-  - port: {{ .Values.proxy-client.port }}
-    targetPort: {{ .Values.proxy-client.port }}
+  - port: {{ index .Values "proxy-client" "port" }}
+    targetPort: {{ index .Values "proxy-client" "port" }}
   type: ClusterIP
 {{- end }}

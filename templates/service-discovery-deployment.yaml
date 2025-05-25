@@ -1,10 +1,10 @@
-{{- if .Values.service-discovery.enabled }}
+{{- if index .Values "service-discovery" "enabled" }}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: service-discovery
 spec:
-  replicas: {{ .Values.service-discovery.replicas }}
+  replicas: {{ index .Values "service-discovery" "replicas" }}
   selector:
     matchLabels:
       app: service-discovery
@@ -15,20 +15,20 @@ spec:
     spec:
       containers:
       - name: service-discovery
-        image: {{ .Values.service-discovery.image.repository }}:{{ .Values.service-discovery.image.tag }}
+        image: {{ index .Values "service-discovery" "image" "repository" }}:{{ index .Values "service-discovery" "image" "tag" }}
         ports:
-        - containerPort: {{ .Values.service-discovery.port }}
+        - containerPort: {{ index .Values "service-discovery" "port" }}
         env:
         - name: SPRING_PROFILES_ACTIVE
-          value: {{ .Values.service-discovery.env.SPRING_PROFILES_ACTIVE }}
+          value: {{ index .Values "service-discovery" "env" "SPRING_PROFILES_ACTIVE" }}
         - name: SPRING_ZIPKIN_BASE_URL
-          value: {{ .Values.service-discovery.env.SPRING_ZIPKIN_BASE_URL }}
+          value: {{ index .Values "service-discovery" "env" "SPRING_ZIPKIN_BASE_URL" }}
         - name: SPRING_CONFIG_IMPORT
-          value: {{ .Values.service-discovery.env.SPRING_CONFIG_IMPORT }}
+          value: {{ index .Values "service-discovery" "env" "SPRING_CONFIG_IMPORT" }}
         livenessProbe:
           httpGet:
             path: /actuator/health
-            port: {{ .Values.service-discovery.port }}
+            port: {{ index .Values "service-discovery" "port" }}
           initialDelaySeconds: 30
           periodSeconds: 10
       initContainers:

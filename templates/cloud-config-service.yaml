@@ -1,4 +1,4 @@
-{{- if .Values.cloud-config.enabled }}
+{{- if index .Values "cloud-config" "enabled" }}
 apiVersion: v1
 kind: Service
 metadata:
@@ -7,7 +7,7 @@ spec:
   selector:
     app: cloud-config
   ports:
-  - port: {{ .Values.cloud-config.port }}
-    targetPort: {{ .Values.cloud-config.port }}
+  - port: {{ index .Values "cloud-config" "port" }}
+    targetPort: {{ index .Values "cloud-config" "port" }}
   type: ClusterIP
 {{- end }}

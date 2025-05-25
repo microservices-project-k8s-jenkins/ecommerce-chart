@@ -1,4 +1,4 @@
-{{- if .Values.shipping-service.enabled }}
+{{- if index .Values "shipping-service" "enabled" }}
 apiVersion: v1
 kind: Service
 metadata:
@@ -7,7 +7,7 @@ spec:
   selector:
     app: shipping-service
   ports:
-  - port: {{ .Values.shipping-service.port }}
-    targetPort: {{ .Values.shipping-service.port }}
+    - port: {{ index .Values "shipping-service" "port" }}
+      targetPort: {{ index .Values "shipping-service" "port" }}
   type: ClusterIP
 {{- end }}

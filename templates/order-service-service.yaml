@@ -1,4 +1,4 @@
-{{- if .Values.order-service.enabled }}
+{{- if index .Values "order-service" "enabled" }}
 apiVersion: v1
 kind: Service
 metadata:
@@ -7,7 +7,7 @@ spec:
   selector:
     app: order-service
   ports:
-  - port: {{ .Values.order-service.port }}
-    targetPort: {{ .Values.order-service.port }}
+  - port: {{ index .Values "order-service" "port" }}
+    targetPort: {{ index .Values "order-service" "port" }}
   type: ClusterIP
 {{- end }}

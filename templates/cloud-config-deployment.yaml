@@ -1,10 +1,10 @@
-{{- if .Values.cloud-config.enabled }}
+{{- if index .Values "cloud-config" "enabled" }}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: cloud-config
 spec:
-  replicas: {{ .Values.cloud-config.replicas }}
+  replicas: {{ index .Values "cloud-config" "replicas" }}
   selector:
     matchLabels:
       app: cloud-config
@@ -15,26 +15,26 @@ spec:
     spec:
       containers:
       - name: cloud-config
-        image: {{ .Values.cloud-config.image.repository }}:{{ .Values.cloud-config.image.tag }}
+        image: {{ index .Values "cloud-config" "image" "repository" }}:{{ index .Values "cloud-config" "image" "tag" }}
         ports:
-        - containerPort: {{ .Values.cloud-config.port }}
+        - containerPort: {{ index .Values "cloud-config" "port" }}
         env:
         - name: SPRING_PROFILES_ACTIVE
-          value: {{ .Values.cloud-config.env.SPRING_PROFILES_ACTIVE }}
+          value: {{ index .Values "cloud-config" "env" "SPRING_PROFILES_ACTIVE" }}
         - name: SPRING_ZIPKIN_BASE_URL
-          value: {{ .Values.cloud-config.env.SPRING_ZIPKIN_BASE_URL }}
+          value: {{ index .Values "cloud-config" "env" "SPRING_ZIPKIN_BASE_URL" }}
         - name: EUREKA_CLIENT_REGION
-          value: {{ .Values.cloud-config.env.EUREKA_CLIENT_REGION }}
+          value: {{ index .Values "cloud-config" "env" "EUREKA_CLIENT_REGION" }}
         - name: EUREKA_CLIENT_AVAILABILITYZONES_DEFAULT
-          value: {{ .Values.cloud-config.env.EUREKA_CLIENT_AVAILABILITYZONES_DEFAULT }}
+          value: {{ index .Values "cloud-config" "env" "EUREKA_CLIENT_AVAILABILITYZONES_DEFAULT" }}
         - name: EUREKA_CLIENT_SERVICEURL_MYZONE
-          value: {{ .Values.cloud-config.env.EUREKA_CLIENT_SERVICEURL_MYZONE }}
+          value: {{ index .Values "cloud-config" "env" "EUREKA_CLIENT_SERVICEURL_MYZONE" }}
         - name: EUREKA_CLIENT_SERVICEURL_DEFAULTZONE
-          value: {{ .Values.cloud-config.env.EUREKA_CLIENT_SERVICEURL_DEFAULTZONE }}
+          value: {{ index .Values "cloud-config" "env" "EUREKA_CLIENT_SERVICEURL_DEFAULTZONE" }}
         livenessProbe:
           httpGet:
             path: /actuator/health
-            port: {{ .Values.cloud-config.port }}
+            port: {{ index .Values "cloud-config" "port" }}
           initialDelaySeconds: 30
           periodSeconds: 10
       initContainers:

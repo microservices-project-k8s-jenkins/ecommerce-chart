@@ -1,10 +1,10 @@
-{{- if .Values.payment-service.enabled }}
+{{- if index .Values "payment-service" "enabled" }}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: payment-service
 spec:
-  replicas: {{ .Values.payment-service.replicas }}
+  replicas: {{ index .Values "payment-service" "replicas" }}
   selector:
     matchLabels:
       app: payment-service
@@ -15,28 +15,28 @@ spec:
     spec:
       containers:
       - name: payment-service
-        image: {{ .Values.payment-service.image.repository }}:{{ .Values.payment-service.image.tag }}
+        image: {{ index .Values "payment-service" "image" "repository" }}:{{ index .Values "payment-service" "image" "tag" }}
         ports:
-        - containerPort: {{ .Values.payment-service.port }}
+        - containerPort: {{ index .Values "payment-service" "port" }}
         env:
         - name: SPRING_PROFILES_ACTIVE
-          value: {{ .Values.payment-service.env.SPRING_PROFILES_ACTIVE }}
+          value: {{ index .Values "payment-service" "env" "SPRING_PROFILES_ACTIVE" }}
         - name: SPRING_ZIPKIN_BASE_URL
-          value: {{ .Values.payment-service.env.SPRING_ZIPKIN_BASE_URL }}
+          value: {{ index .Values "payment-service" "env" "SPRING_ZIPKIN_BASE_URL" }}
         - name: EUREKA_CLIENT_REGION
-          value: {{ .Values.payment-service.env.EUREKA_CLIENT_REGION }}
+          value: {{ index .Values "payment-service" "env" "EUREKA_CLIENT_REGION" }}
         - name: EUREKA_CLIENT_AVAILABILITYZONES_DEFAULT
-          value: {{ .Values.payment-service.env.EUREKA_CLIENT_AVAILABILITYZONES_DEFAULT }}
+          value: {{ index .Values "payment-service" "env" "EUREKA_CLIENT_AVAILABILITYZONES_DEFAULT" }}
         - name: EUREKA_CLIENT_SERVICEURL_MYZONE
-          value: {{ .Values.payment-service.env.EUREKA_CLIENT_SERVICEURL_MYZONE }}
+          value: {{ index .Values "payment-service" "env" "EUREKA_CLIENT_SERVICEURL_MYZONE" }}
         - name: EUREKA_CLIENT_SERVICEURL_DEFAULTZONE
-          value: {{ .Values.payment-service.env.EUREKA_CLIENT_SERVICEURL_DEFAULTZONE }}
+          value: {{ index .Values "payment-service" "env" "EUREKA_CLIENT_SERVICEURL_DEFAULTZONE" }}
         - name: SPRING_CONFIG_IMPORT
-          value: {{ .Values.payment-service.env.SPRING_CONFIG_IMPORT }}
+          value: {{ index .Values "payment-service" "env" "SPRING_CONFIG_IMPORT" }}
         livenessProbe:
           httpGet:
             path: /actuator/health
-            port: {{ .Values.payment-service.port }}
+            port: {{ index .Values "payment-service" "port" }}
           initialDelaySeconds: 30
           periodSeconds: 10
       initContainers:
