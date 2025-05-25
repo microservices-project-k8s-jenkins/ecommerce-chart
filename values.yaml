@@ -17,6 +17,8 @@ cloud-config:
     EUREKA_CLIENT_AVAILABILITYZONES_DEFAULT: "myzone"
     EUREKA_CLIENT_SERVICEURL_MYZONE: "http://service-discovery:8761/eureka"
     EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: "http://service-discovery:8761/eureka/"
+    EUREKA_INSTANCE_HOSTNAME: "cloud-config"
+    EUREKA_INSTANCE_PREFER_IP_ADDRESS: "false"
 service-discovery:
   enabled: true
   image:
@@ -41,6 +43,8 @@ api-gateway:
     EUREKA_CLIENT_SERVICEURL_MYZONE: "http://service-discovery:8761/eureka"
     EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: "http://service-discovery:8761/eureka/"
     SPRING_CONFIG_IMPORT: "optional:configserver:http://cloud-config:9296/"
+    EUREKA_INSTANCE_HOSTNAME: "api-gateway"
+    EUREKA_INSTANCE_PREFER_IP_ADDRESS: "false"
 proxy-client:
   enabled: true
   image:
@@ -55,6 +59,8 @@ proxy-client:
     EUREKA_CLIENT_SERVICEURL_MYZONE: "http://service-discovery:8761/eureka"
     EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: "http://service-discovery:8761/eureka/"
     SPRING_CONFIG_IMPORT: "optional:configserver:http://cloud-config:9296/"
+    EUREKA_INSTANCE_HOSTNAME: "proxy-client"
+    EUREKA_INSTANCE_PREFER_IP_ADDRESS: "false"
 frontend:
   enabled: true
   image:
@@ -79,6 +85,8 @@ order-service:
     EUREKA_CLIENT_SERVICEURL_MYZONE: "http://service-discovery:8761/eureka"
     EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: "http://service-discovery:8761/eureka/"
     SPRING_CONFIG_IMPORT: "optional:configserver:http://cloud-config:9296/"
+    EUREKA_INSTANCE_HOSTNAME: "order-service"
+    EUREKA_INSTANCE_PREFER_IP_ADDRESS: "false"
 payment-service:
   enabled: true
   image:
@@ -93,6 +101,8 @@ payment-service:
     EUREKA_CLIENT_SERVICEURL_MYZONE: "http://service-discovery:8761/eureka"
     EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: "http://service-discovery:8761/eureka/"
     SPRING_CONFIG_IMPORT: "optional:configserver:http://cloud-config:9296/"
+    EUREKA_INSTANCE_HOSTNAME: "payment-service"
+    EUREKA_INSTANCE_PREFER_IP_ADDRESS: "false"
 product-service:
   enabled: true
   image:
@@ -107,6 +117,8 @@ product-service:
     EUREKA_CLIENT_SERVICEURL_MYZONE: "http://service-discovery:8761/eureka"
     EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: "http://service-discovery:8761/eureka/"
     SPRING_CONFIG_IMPORT: "optional:configserver:http://cloud-config:9296/"
+    EUREKA_INSTANCE_HOSTNAME: "product-service"
+    EUREKA_INSTANCE_PREFER_IP_ADDRESS: "false"
 shipping-service:
   enabled: true
   image:
@@ -121,6 +133,8 @@ shipping-service:
     EUREKA_CLIENT_SERVICEURL_MYZONE: "http://service-discovery:8761/eureka"
     EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: "http://service-discovery:8761/eureka/"
     SPRING_CONFIG_IMPORT: "optional:configserver:http://cloud-config:9296/"
+    EUREKA_INSTANCE_HOSTNAME: "shipping-service"
+    EUREKA_INSTANCE_PREFER_IP_ADDRESS: "false"
 user-service:
   enabled: true
   image:
@@ -135,6 +149,8 @@ user-service:
     EUREKA_CLIENT_SERVICEURL_MYZONE: "http://service-discovery:8761/eureka"
     EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: "http://service-discovery:8761/eureka/"
     SPRING_CONFIG_IMPORT: "optional:configserver:http://cloud-config:9296/"
+    EUREKA_INSTANCE_HOSTNAME: "user-service"
+    EUREKA_INSTANCE_PREFER_IP_ADDRESS: "false"
 favourite-service:
   enabled: true
   image:
@@ -149,3 +165,5 @@ favourite-service:
     EUREKA_CLIENT_SERVICEURL_MYZONE: "http://service-discovery:8761/eureka"
     EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: "http://service-discovery:8761/eureka/"
     SPRING_CONFIG_IMPORT: "optional:configserver:http://cloud-config:9296/"
+    EUREKA_INSTANCE_HOSTNAME: "favourite-service"
+    EUREKA_INSTANCE_PREFER_IP_ADDRESS: "false"
