@@ -7,7 +7,7 @@ zipkin:
 cloud-config:
   enabled: true
   image:
-    repository: tu-usuario/cloud-config
+    repository: sjbs0212/cloud-config
     tag: "0.1.0"
   port: 9296
   env:
@@ -20,7 +20,7 @@ cloud-config:
 service-discovery:
   enabled: true
   image:
-    repository: tu-usuario/service-discovery
+    repository: sjbs0212/service-discovery
     tag: "0.1.0"
   port: 8761
   env:
@@ -30,7 +30,7 @@ service-discovery:
 api-gateway:
   enabled: true
   image:
-    repository: tu-usuario/api-gateway
+    repository: sjbs0212/api-gateway
     tag: "0.1.0"
   port: 8080
   env:
@@ -44,7 +44,7 @@ api-gateway:
 proxy-client:
   enabled: true
   image:
-    repository: tu-usuario/proxy-client
+    repository: sjbs0212/proxy-client
     tag: "0.1.0"
   port: 8900
   env:
@@ -58,7 +58,7 @@ proxy-client:
 frontend:
   enabled: true
   image:
-    repository: tu-usuario/frontend
+    repository: sjbs0212/frontend
     tag: "1.0"
   port: 80
   env:
@@ -68,7 +68,7 @@ frontend:
 order-service:
   enabled: true
   image:
-    repository: tu-usuario/order-service
+    repository: sjbs0212/order-service
     tag: "0.1.0"
   port: 8300
   env:
@@ -82,7 +82,7 @@ order-service:
 payment-service:
   enabled: true
   image:
-    repository: tu-usuario/payment-service
+    repository: sjbs0212/payment-service
     tag: "0.1.0"
   port: 8400
   env:
@@ -96,7 +96,7 @@ payment-service:
 product-service:
   enabled: true
   image:
-    repository: tu-usuario/product-service
+    repository: sjbs0212/product-service
     tag: "0.1.0"
   port: 8500
   env:
@@ -110,7 +110,7 @@ product-service:
 shipping-service:
   enabled: true
   image:
-    repository: tu-usuario/shipping-service
+    repository: sjbs0212/shipping-service
     tag: "0.1.0"
   port: 8600
   env:
@@ -124,7 +124,7 @@ shipping-service:
 user-service:
   enabled: true
   image:
-    repository: tu-usuario/user-service
+    repository: sjbs0212/user-service
     tag: "0.1.0"
   port: 8700
   env:
@@ -138,7 +138,7 @@ user-service:
 favourite-service:
   enabled: true
   image:
-    repository: tu-usuario/favourite-service
+    repository: sjbs0212/favourite-service
     tag: "0.1.0"
   port: 8800
   env:
