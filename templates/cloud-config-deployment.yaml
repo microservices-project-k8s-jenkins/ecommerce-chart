@@ -31,6 +31,10 @@ spec:
           value: {{ index .Values "cloud-config" "env" "EUREKA_CLIENT_SERVICEURL_MYZONE" }}
         - name: EUREKA_CLIENT_SERVICEURL_DEFAULTZONE
           value: {{ index .Values "cloud-config" "env" "EUREKA_CLIENT_SERVICEURL_DEFAULTZONE" }}
+        - name: EUREKA_INSTANCE_HOSTNAME
+          value: {{ index .Values "cloud-config" "env" "EUREKA_INSTANCE_HOSTNAME" }}
+        - name: EUREKA_INSTANCE_PREFER_IP_ADDRESS
+          value: "{{ index .Values "cloud-config" "env" "EUREKA_INSTANCE_PREFER_IP_ADDRESS" }}"
       initContainers:
       - name: wait-for-dependencies
         image: busybox

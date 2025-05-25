@@ -33,6 +33,10 @@ spec:
           value: {{ index .Values "favourite-service" "env" "EUREKA_CLIENT_SERVICEURL_DEFAULTZONE" }}
         - name: SPRING_CONFIG_IMPORT
           value: {{ index .Values "favourite-service" "env" "SPRING_CONFIG_IMPORT" }}
+        - name: EUREKA_INSTANCE_HOSTNAME
+          value: {{ index .Values "favourite-service" "env" "EUREKA_INSTANCE_HOSTNAME" }}
+        - name: EUREKA_INSTANCE_PREFER_IP_ADDRESS
+          value: "{{ index .Values "favourite-service" "env" "EUREKA_INSTANCE_PREFER_IP_ADDRESS" }}"
       initContainers:
       - name: wait-for-dependencies
         image: busybox
