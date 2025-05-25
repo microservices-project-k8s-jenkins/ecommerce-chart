@@ -33,12 +33,6 @@ spec:
           value: {{ index .Values "product-service" "env" "EUREKA_CLIENT_SERVICEURL_DEFAULTZONE" }}
         - name: SPRING_CONFIG_IMPORT
           value: {{ index .Values "product-service" "env" "SPRING_CONFIG_IMPORT" }}
-        livenessProbe:
-          httpGet:
-            path: /actuator/health
-            port: {{ index .Values "product-service" "port" }}
-          initialDelaySeconds: 30
-          periodSeconds: 10
       initContainers:
       - name: wait-for-dependencies
         image: busybox

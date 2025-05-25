@@ -25,14 +25,8 @@ spec:
           value: {{ index .Values "service-discovery" "env" "SPRING_ZIPKIN_BASE_URL" }}
         - name: SPRING_CONFIG_IMPORT
           value: {{ index .Values "service-discovery" "env" "SPRING_CONFIG_IMPORT" }}
-        livenessProbe:
-          httpGet:
-            path: /actuator/health
-            port: {{ index .Values "service-discovery" "port" }}
-          initialDelaySeconds: 30
-          periodSeconds: 10
       initContainers:
       - name: wait-for-dependencies
         image: busybox
-        command: ['sh', '-c', 'until nc -z zipkin 9411 && nc -z cloud-config 9296; do echo waiting for dependencies; sleep 2; done;']
+        command: ['sh', '-c', 'until nc -z zipkin 9411; do echo waiting for dependencies; sleep 2; done;']
 {{- end }}

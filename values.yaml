@@ -58,7 +58,7 @@ proxy-client:
 frontend:
   enabled: true
   image:
-    repository: sjbs0212/frontend
+    repository: sjbs0212/ecommerce-frontend
     tag: latest
   port: 80
   env:
