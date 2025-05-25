@@ -1,0 +1,13 @@
+{{- if .Values.zipkin.enabled }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: zipkin
+spec:
+  selector:
+    app: zipkin
+  ports:
+  - port: {{ .Values.zipkin.port }}
+    targetPort: {{ .Values.zipkin.port }}
+  type: ClusterIP
+{{- end }}

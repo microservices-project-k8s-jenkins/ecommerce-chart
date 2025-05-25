@@ -1,0 +1,46 @@
+{{- if .Values.api-gateway.enabled }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: api-gateway
+spec:
+  replicas: {{ .Values.api-gateway.replicas }}
+  selector:
+    matchLabels:
+      app: api-gateway
+  template:
+    metadata:
+      labels:
+        app: api-gateway
+    spec:
+      containers:
+      - name: api-gateway
+        image: {{ .Values.api-gateway.image.repository }}:{{ .Values.api-gateway.image.tag }}
+        ports:
+        - containerPort: {{ .Values.api-gateway.port }}
+        env:
+        - name: SPRING_PROFILES_ACTIVE
+          value: {{ .Values.api-gateway.env.SPRING_PROFILES_ACTIVE }}
+        - name: SPRING_ZIPKIN_BASE_URL
+          value: {{ .Values.api-gateway.env.SPRING_ZIPKIN_BASE_URL }}
+        - name: EUREKA_CLIENT_REGION
+          value: {{ .Values.api-gateway.env.EUREKA_CLIENT_REGION }}
+        - name: EUREKA_CLIENT_AVAILABILITYZONES_DEFAULT
+          value: {{ .Values.api-gateway.env.EUREKA_CLIENT_AVAILABILITYZONES_DEFAULT }}
+        - name: EUREKA_CLIENT_SERVICEURL_MYZONE
+          value: {{ .Values.api-gateway.env.EUREKA_CLIENT_SERVICEURL_MYZONE }}
+        - name: EUREKA_CLIENT_SERVICEURL_DEFAULTZONE
+          value: {{ .Values.api-gateway.env.EUREKA_CLIENT_SERVICEURL_DEFAULTZONE }}
+        - name: SPRING_CONFIG_IMPORT
+          value: {{ .Values.api-gateway.env.SPRING_CONFIG_IMPORT }}
+        livenessProbe:
+          httpGet:
+            path: /actuator/health
+            port: {{ .Values.api-gateway.port }}
+          initialDelaySeconds: 30
+          periodSeconds: 10
+      initContainers:
+      - name: wait-for-dependencies
+        image: busybox
+        command: ['sh', '-c', 'until nc -z zipkin 9411 && nc -z cloud-config 9296 && nc -z service-discovery 8761; do echo waiting for dependencies; sleep 2; done;']
+{{- end }}

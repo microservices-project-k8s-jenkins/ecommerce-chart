@@ -1,0 +1,13 @@
+{{- if .Values.service-discovery.enabled }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: service-discovery
+spec:
+  selector:
+    app: service-discovery
+  ports:
+  - port: {{ .Values.service-discovery.port }}
+    targetPort: {{ .Values.service-discovery.port }}
+  type: ClusterIP
+{{- end }}

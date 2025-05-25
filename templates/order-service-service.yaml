@@ -1,0 +1,13 @@
+{{- if .Values.order-service.enabled }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: order-service
+spec:
+  selector:
+    app: order-service
+  ports:
+  - port: {{ .Values.order-service.port }}
+    targetPort: {{ .Values.order-service.port }}
+  type: ClusterIP
+{{- end }}

@@ -1,0 +1,51 @@
+apiVersion: v2
+name: ecommerce-app
+version: 0.1.0
+dependencies:
+  - name: zipkin
+    version: 0.1.0
+    repository: "file://./charts/zipkin"
+  - name: cloud-config
+    version: 0.1.0
+    repository: "file://./charts/cloud-config"
+    condition: cloud-config.enabled
+  - name: service-discovery
+    version: 0.1.0
+    repository: "file://./charts/service-discovery"
+    condition: service-discovery.enabled
+  - name: api-gateway
+    version: 0.1.0
+    repository: "file://./charts/api-gateway"
+    condition: api-gateway.enabled
+  - name: proxy-client
+    version: 0.1.0
+    repository: "file://./charts/proxy-client"
+    condition: proxy-client.enabled
+  - name: frontend
+    version: 0.1.0
+    repository: "file://./charts/frontend"
+    condition: frontend.enabled
+  - name: order-service
+    version: 0.1.0
+    repository: "file://./charts/order-service"
+    condition: order-service.enabled
+  - name: payment-service
+    version: 0.1.0
+    repository: "file://./charts/payment-service"
+    condition: payment-service.enabled
+  - name: product-service
+    version: 0.1.0
+    repository: "file://./charts/product-service"
+    condition: product-service.enabled
+  - name: shipping-service
+    version: 0.1.0
+    repository: "file://./charts/shipping-service"
+    condition: shipping-service.enabled
+  - name: user-service
+    version: 0.1.0
+    repository: "file://./charts/user-service"
+    condition: user-service.enabled
+  - name: favourite-service
+    version: 0.1.0
+    repository: "file://./charts/favourite-service"
+    condition: favourite-service.enabled

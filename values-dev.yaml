@@ -1,0 +1,36 @@
+zipkin:
+  enabled: true
+  replicas: 1
+cloud-config:
+  enabled: true
+  replicas: 1
+service-discovery:
+  enabled: true
+  replicas: 1
+api-gateway:
+  enabled: true
+  replicas: 1
+proxy-client:
+  enabled: true
+  replicas: 1
+frontend:
+  enabled: true
+  replicas: 1
+order-service:
+  enabled: true
+  replicas: 1
+payment-service:
+  enabled: true
+  replicas: 1
+product-service:
+  enabled: true
+  replicas: 1
+shipping-service:
+  enabled: true
+  replicas: 1
+user-service:
+  enabled: true
+  replicas: 1
+favourite-service:
+  enabled: true
+  replicas: 1

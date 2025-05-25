@@ -1,0 +1,151 @@
+zipkin:
+  enabled: true
+  image:
+    repository: openzipkin/zipkin
+    tag: latest
+  port: 9411
+cloud-config:
+  enabled: true
+  image:
+    repository: tu-usuario/cloud-config
+    tag: "0.1.0"
+  port: 9296
+  env:
+    SPRING_PROFILES_ACTIVE: "dev"
+    SPRING_ZIPKIN_BASE_URL: "http://zipkin:9411"
+    EUREKA_CLIENT_REGION: "default"
+    EUREKA_CLIENT_AVAILABILITYZONES_DEFAULT: "myzone"
+    EUREKA_CLIENT_SERVICEURL_MYZONE: "http://service-discovery:8761/eureka"
+    EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: "http://service-discovery:8761/eureka/"
+service-discovery:
+  enabled: true
+  image:
+    repository: tu-usuario/service-discovery
+    tag: "0.1.0"
+  port: 8761
+  env:
+    SPRING_PROFILES_ACTIVE: "dev"
+    SPRING_ZIPKIN_BASE_URL: "http://zipkin:9411"
+    SPRING_CONFIG_IMPORT: "optional:configserver:http://cloud-config:9296/"
+api-gateway:
+  enabled: true
+  image:
+    repository: tu-usuario/api-gateway
+    tag: "0.1.0"
+  port: 8080
+  env:
+    SPRING_PROFILES_ACTIVE: "dev"
+    SPRING_ZIPKIN_BASE_URL: "http://zipkin:9411"
+    EUREKA_CLIENT_REGION: "default"
+    EUREKA_CLIENT_AVAILABILITYZONES_DEFAULT: "myzone"
+    EUREKA_CLIENT_SERVICEURL_MYZONE: "http://service-discovery:8761/eureka"
+    EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: "http://service-discovery:8761/eureka/"
+    SPRING_CONFIG_IMPORT: "optional:configserver:http://cloud-config:9296/"
+proxy-client:
+  enabled: true
+  image:
+    repository: tu-usuario/proxy-client
+    tag: "0.1.0"
+  port: 8900
+  env:
+    SPRING_PROFILES_ACTIVE: "dev"
+    SPRING_ZIPKIN_BASE_URL: "http://zipkin:9411"
+    EUREKA_CLIENT_REGION: "default"
+    EUREKA_CLIENT_AVAILABILITYZONES_DEFAULT: "myzone"
+    EUREKA_CLIENT_SERVICEURL_MYZONE: "http://service-discovery:8761/eureka"
+    EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: "http://service-discovery:8761/eureka/"
+    SPRING_CONFIG_IMPORT: "optional:configserver:http://cloud-config:9296/"
+frontend:
+  enabled: true
+  image:
+    repository: tu-usuario/frontend
+    tag: "1.0"
+  port: 80
+  env:
+    API_HOST: "api-gateway"
+    API_PORT: "8080"
+    ENVIRONMENT: "development"
+order-service:
+  enabled: true
+  image:
+    repository: tu-usuario/order-service
+    tag: "0.1.0"
+  port: 8300
+  env:
+    SPRING_PROFILES_ACTIVE: "dev"
+    SPRING_ZIPKIN_BASE_URL: "http://zipkin:9411"
+    EUREKA_CLIENT_REGION: "default"
+    EUREKA_CLIENT_AVAILABILITYZONES_DEFAULT: "myzone"
+    EUREKA_CLIENT_SERVICEURL_MYZONE: "http://service-discovery:8761/eureka"
+    EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: "http://service-discovery:8761/eureka/"
+    SPRING_CONFIG_IMPORT: "optional:configserver:http://cloud-config:9296/"
+payment-service:
+  enabled: true
+  image:
+    repository: tu-usuario/payment-service
+    tag: "0.1.0"
+  port: 8400
+  env:
+    SPRING_PROFILES_ACTIVE: "dev"
+    SPRING_ZIPKIN_BASE_URL: "http://zipkin:9411"
+    EUREKA_CLIENT_REGION: "default"
+    EUREKA_CLIENT_AVAILABILITYZONES_DEFAULT: "myzone"
+    EUREKA_CLIENT_SERVICEURL_MYZONE: "http://service-discovery:8761/eureka"
+    EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: "http://service-discovery:8761/eureka/"
+    SPRING_CONFIG_IMPORT: "optional:configserver:http://cloud-config:9296/"
+product-service:
+  enabled: true
+  image:
+    repository: tu-usuario/product-service
+    tag: "0.1.0"
+  port: 8500
+  env:
+    SPRING_PROFILES_ACTIVE: "dev"
+    SPRING_ZIPKIN_BASE_URL: "http://zipkin:9411"
+    EUREKA_CLIENT_REGION: "default"
+    EUREKA_CLIENT_AVAILABILITYZONES_DEFAULT: "myzone"
+    EUREKA_CLIENT_SERVICEURL_MYZONE: "http://service-discovery:8761/eureka"
+    EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: "http://service-discovery:8761/eureka/"
+    SPRING_CONFIG_IMPORT: "optional:configserver:http://cloud-config:9296/"
+shipping-service:
+  enabled: true
+  image:
+    repository: tu-usuario/shipping-service
+    tag: "0.1.0"
+  port: 8600
+  env:
+    SPRING_PROFILES_ACTIVE: "dev"
+    SPRING_ZIPKIN_BASE_URL: "http://zipkin:9411"
+    EUREKA_CLIENT_REGION: "default"
+    EUREKA_CLIENT_AVAILABILITYZONES_DEFAULT: "myzone"
+    EUREKA_CLIENT_SERVICEURL_MYZONE: "http://service-discovery:8761/eureka"
+    EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: "http://service-discovery:8761/eureka/"
+    SPRING_CONFIG_IMPORT: "optional:configserver:http://cloud-config:9296/"
+user-service:
+  enabled: true
+  image:
+    repository: tu-usuario/user-service
+    tag: "0.1.0"
+  port: 8700
+  env:
+    SPRING_PROFILES_ACTIVE: "dev"
+    SPRING_ZIPKIN_BASE_URL: "http://zipkin:9411"
+    EUREKA_CLIENT_REGION: "default"
+    EUREKA_CLIENT_AVAILABILITYZONES_DEFAULT: "myzone"
+    EUREKA_CLIENT_SERVICEURL_MYZONE: "http://service-discovery:8761/eureka"
+    EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: "http://service-discovery:8761/eureka/"
+    SPRING_CONFIG_IMPORT: "optional:configserver:http://cloud-config:9296/"
+favourite-service:
+  enabled: true
+  image:
+    repository: tu-usuario/favourite-service
+    tag: "0.1.0"
+  port: 8800
+  env:
+    SPRING_PROFILES_ACTIVE: "dev"
+    SPRING_ZIPKIN_BASE_URL: "http://zipkin:9411"
+    EUREKA_CLIENT_REGION: "default"
+    EUREKA_CLIENT_AVAILABILITYZONES_DEFAULT: "myzone"
+    EUREKA_CLIENT_SERVICEURL_MYZONE: "http://service-discovery:8761/eureka"
+    EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: "http://service-discovery:8761/eureka/"
+    SPRING_CONFIG_IMPORT: "optional:configserver:http://cloud-config:9296/"

@@ -1,0 +1,44 @@
+{{- if .Values.cloud-config.enabled }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cloud-config
+spec:
+  replicas: {{ .Values.cloud-config.replicas }}
+  selector:
+    matchLabels:
+      app: cloud-config
+  template:
+    metadata:
+      labels:
+        app: cloud-config
+    spec:
+      containers:
+      - name: cloud-config
+        image: {{ .Values.cloud-config.image.repository }}:{{ .Values.cloud-config.image.tag }}
+        ports:
+        - containerPort: {{ .Values.cloud-config.port }}
+        env:
+        - name: SPRING_PROFILES_ACTIVE
+          value: {{ .Values.cloud-config.env.SPRING_PROFILES_ACTIVE }}
+        - name: SPRING_ZIPKIN_BASE_URL
+          value: {{ .Values.cloud-config.env.SPRING_ZIPKIN_BASE_URL }}
+        - name: EUREKA_CLIENT_REGION
+          value: {{ .Values.cloud-config.env.EUREKA_CLIENT_REGION }}
+        - name: EUREKA_CLIENT_AVAILABILITYZONES_DEFAULT
+          value: {{ .Values.cloud-config.env.EUREKA_CLIENT_AVAILABILITYZONES_DEFAULT }}
+        - name: EUREKA_CLIENT_SERVICEURL_MYZONE
+          value: {{ .Values.cloud-config.env.EUREKA_CLIENT_SERVICEURL_MYZONE }}
+        - name: EUREKA_CLIENT_SERVICEURL_DEFAULTZONE
+          value: {{ .Values.cloud-config.env.EUREKA_CLIENT_SERVICEURL_DEFAULTZONE }}
+        livenessProbe:
+          httpGet:
+            path: /actuator/health
+            port: {{ .Values.cloud-config.port }}
+          initialDelaySeconds: 30
+          periodSeconds: 10
+      initContainers:
+      - name: wait-for-zipkin
+        image: busybox
+        command: ['sh', '-c', 'until nc -z zipkin 9411; do echo waiting for zipkin; sleep 2; done;']
+{{- end }}

@@ -1,0 +1,13 @@
+{{- if .Values.api-gateway.enabled }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: api-gateway
+spec:
+  selector:
+    app: api-gateway
+  ports:
+  - port: {{ .Values.api-gateway.port }}
+    targetPort: {{ .Values.api-gateway.port }}
+  type: ClusterIP
+{{- end }}

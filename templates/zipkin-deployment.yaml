@@ -1,0 +1,27 @@
+{{- if .Values.zipkin.enabled }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: zipkin
+spec:
+  replicas: {{ .Values.zipkin.replicas }}
+  selector:
+    matchLabels:
+      app: zipkin
+  template:
+    metadata:
+      labels:
+        app: zipkin
+    spec:
+      containers:
+      - name: zipkin
+        image: {{ .Values.zipkin.image.repository }}:{{ .Values.zipkin.image.tag }}
+        ports:
+        - containerPort: {{ .Values.zipkin.port }}
+        livenessProbe:
+          httpGet:
+            path: /actuator/health
+            port: {{ .Values.zipkin.port }}
+          initialDelaySeconds: 30
+          periodSeconds: 10
+{{- end }}

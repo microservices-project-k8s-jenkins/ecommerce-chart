@@ -1,0 +1,55 @@
+zipkin:
+  enabled: true
+  replicas: 2
+cloud-config:
+  enabled: true
+  replicas: 2
+  env:
+    SPRING_PROFILES_ACTIVE: "stage"
+service-discovery:
+  enabled: true
+  replicas: 2
+  env:
+    SPRING_PROFILES_ACTIVE: "stage"
+api-gateway:
+  enabled: true
+  replicas: 2
+  env:
+    SPRING_PROFILES_ACTIVE: "stage"
+proxy-client:
+  enabled: true
+  replicas: 2
+  env:
+    SPRING_PROFILES_ACTIVE: "stage"
+frontend:
+  enabled: false
+order-service:
+  enabled: true
+  replicas: 2
+  env:
+    SPRING_PROFILES_ACTIVE: "stage"
+payment-service:
+  enabled: true
+  replicas: 2
+  env:
+    SPRING_PROFILES_ACTIVE: "stage"
+product-service:
+  enabled: true
+  replicas: 2
+  env:
+    SPRING_PROFILES_ACTIVE: "stage"
+shipping-service:
+  enabled: true
+  replicas: 2
+  env:
+    SPRING_PROFILES_ACTIVE: "stage"
+user-service:
+  enabled: true
+  replicas: 2
+  env:
+    SPRING_PROFILES_ACTIVE: "stage"
+favourite-service:
+  enabled: true
+  replicas: 2
+  env:
+    SPRING_PROFILES_ACTIVE: "stage"

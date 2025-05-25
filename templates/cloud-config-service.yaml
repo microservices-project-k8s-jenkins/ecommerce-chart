@@ -1,0 +1,13 @@
+{{- if .Values.cloud-config.enabled }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: cloud-config
+spec:
+  selector:
+    app: cloud-config
+  ports:
+  - port: {{ .Values.cloud-config.port }}
+    targetPort: {{ .Values.cloud-config.port }}
+  type: ClusterIP
+{{- end }}

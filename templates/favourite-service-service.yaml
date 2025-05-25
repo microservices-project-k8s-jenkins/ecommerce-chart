@@ -1,0 +1,13 @@
+{{- if .Values.favourite-service.enabled }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: favourite-service
+spec:
+  selector:
+    app: favourite-service
+  ports:
+  - port: {{ .Values.favourite-service.port }}
+    targetPort: {{ .Values.favourite-service.port }}
+  type: ClusterIP
+{{- end }}

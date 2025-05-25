@@ -1,0 +1,13 @@
+{{- if .Values.product-service.enabled }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: product-service
+spec:
+  selector:
+    app: product-service
+  ports:
+  - port: {{ .Values.product-service.port }}
+    targetPort: {{ .Values.product-service.port }}
+  type: ClusterIP
+{{- end }}

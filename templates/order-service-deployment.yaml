@@ -1,0 +1,46 @@
+{{- if .Values.order-service.enabled }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: order-service
+spec:
+  replicas: {{ .Values.order-service.replicas }}
+  selector:
+    matchLabels:
+      app: order-service
+  template:
+    metadata:
+      labels:
+        app: order-service
+    spec:
+      containers:
+      - name: order-service
+        image: {{ .Values.order-service.image.repository }}:{{ .Values.order-service.image.tag }}
+        ports:
+        - containerPort: {{ .Values.order-service.port }}
+        env:
+        - name: SPRING_PROFILES_ACTIVE
+          value: {{ .Values.order-service.env.SPRING_PROFILES_ACTIVE }}
+        - name: SPRING_ZIPKIN_BASE_URL
+          value: {{ .Values.order-service.env.SPRING_ZIPKIN_BASE_URL }}
+        - name: EUREKA_CLIENT_REGION
+          value: {{ .Values.order-service.env.EUREKA_CLIENT_REGION }}
+        - name: EUREKA_CLIENT_AVAILABILITYZONES_DEFAULT
+          value: {{ .Values.order-service.env.EUREKA_CLIENT_AVAILABILITYZONES_DEFAULT }}
+        - name: EUREKA_CLIENT_SERVICEURL_MYZONE
+          value: {{ .Values.order-service.env.EUREKA_CLIENT_SERVICEURL_MYZONE }}
+        - name: EUREKA_CLIENT_SERVICEURL_DEFAULTZONE
+          value: {{ .Values.order-service.env.EUREKA_CLIENT_SERVICEURL_DEFAULTZONE }}
+        - name: SPRING_CONFIG_IMPORT
+          value: {{ .Values.order-service.env.SPRING_CONFIG_IMPORT }}
+        livenessProbe:
+          httpGet:
+            path: /actuator/health
+            port: {{ .Values.order-service.port }}
+          initialDelaySeconds: 30
+          periodSeconds: 10
+      initContainers:
+      - name: wait-for-dependencies
+        image: busybox
+        command: ['sh', '-c', 'until nc -z zipkin 9411 && nc -z cloud-config 9296 && nc -z service-discovery 8761; do echo waiting for dependencies; sleep 2; done;']
+{{- end }}
