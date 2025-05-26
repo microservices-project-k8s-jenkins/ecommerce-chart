@@ -23,36 +23,36 @@ proxy-client:
     SPRING_PROFILES_ACTIVE: "prod"
 frontend:
   enabled: true
-  replicas: 2
+  replicas: 1
   env:
     ENVIRONMENT: "production"
 order-service:
   enabled: true
-  replicas: 2
+  replicas: 1
   env:
     SPRING_PROFILES_ACTIVE: "prod"
 payment-service:
   enabled: true
-  replicas: 2
+  replicas: 1
   env:
     SPRING_PROFILES_ACTIVE: "prod"
 product-service:
   enabled: true
-  replicas: 2
+  replicas: 1
   env:
     SPRING_PROFILES_ACTIVE: "prod"
 shipping-service:
   enabled: true
-  replicas: 2
+  replicas: 1
   env:
     SPRING_PROFILES_ACTIVE: "prod"
 user-service:
   enabled: true
-  replicas: 2
+  replicas: 1
   env:
     SPRING_PROFILES_ACTIVE: "prod"
 favourite-service:
   enabled: true
-  replicas: 2
+  replicas: 1
   env:
     SPRING_PROFILES_ACTIVE: "prod"

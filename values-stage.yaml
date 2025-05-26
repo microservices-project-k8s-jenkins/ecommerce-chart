@@ -25,31 +25,31 @@ frontend:
   enabled: false
 order-service:
   enabled: true
-  replicas: 2
+  replicas: 1
   env:
     SPRING_PROFILES_ACTIVE: "stage"
 payment-service:
   enabled: true
-  replicas: 2
+  replicas: 1
   env:
     SPRING_PROFILES_ACTIVE: "stage"
 product-service:
   enabled: true
-  replicas: 2
+  replicas: 1
   env:
     SPRING_PROFILES_ACTIVE: "stage"
 shipping-service:
   enabled: true
-  replicas: 2
+  replicas: 1
   env:
     SPRING_PROFILES_ACTIVE: "stage"
 user-service:
   enabled: true
-  replicas: 2
+  replicas: 1
   env:
     SPRING_PROFILES_ACTIVE: "stage"
 favourite-service:
   enabled: true
-  replicas: 2
+  replicas: 1
   env:
     SPRING_PROFILES_ACTIVE: "stage"
