@@ -1,58 +1,58 @@
 zipkin:
   enabled: true
-  replicas: 3
+  replicas: 1
 cloud-config:
   enabled: true
-  replicas: 3
+  replicas: 1
   env:
     SPRING_PROFILES_ACTIVE: "prod"
 service-discovery:
   enabled: true
-  replicas: 3
+  replicas: 1
   env:
     SPRING_PROFILES_ACTIVE: "prod"
 api-gateway:
   enabled: true
-  replicas: 3
+  replicas: 1
   env:
     SPRING_PROFILES_ACTIVE: "prod"
 proxy-client:
   enabled: true
-  replicas: 3
+  replicas: 1
   env:
     SPRING_PROFILES_ACTIVE: "prod"
 frontend:
   enabled: true
-  replicas: 3
+  replicas: 2
   env:
     ENVIRONMENT: "production"
 order-service:
   enabled: true
-  replicas: 3
+  replicas: 2
   env:
     SPRING_PROFILES_ACTIVE: "prod"
 payment-service:
   enabled: true
-  replicas: 3
+  replicas: 2
   env:
     SPRING_PROFILES_ACTIVE: "prod"
 product-service:
   enabled: true
-  replicas: 3
+  replicas: 2
   env:
     SPRING_PROFILES_ACTIVE: "prod"
 shipping-service:
   enabled: true
-  replicas: 3
+  replicas: 2
   env:
     SPRING_PROFILES_ACTIVE: "prod"
 user-service:
   enabled: true
-  replicas: 3
+  replicas: 2
   env:
     SPRING_PROFILES_ACTIVE: "prod"
 favourite-service:
   enabled: true
-  replicas: 3
+  replicas: 2
   env:
     SPRING_PROFILES_ACTIVE: "prod"

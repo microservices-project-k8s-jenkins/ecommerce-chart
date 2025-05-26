@@ -1,24 +1,24 @@
 zipkin:
   enabled: true
-  replicas: 2
+  replicas: 1
 cloud-config:
   enabled: true
-  replicas: 2
+  replicas: 1
   env:
     SPRING_PROFILES_ACTIVE: "stage"
 service-discovery:
   enabled: true
-  replicas: 2
+  replicas: 1
   env:
     SPRING_PROFILES_ACTIVE: "stage"
 api-gateway:
   enabled: true
-  replicas: 2
+  replicas: 1
   env:
     SPRING_PROFILES_ACTIVE: "stage"
 proxy-client:
   enabled: true
-  replicas: 2
+  replicas: 1
   env:
     SPRING_PROFILES_ACTIVE: "stage"
 frontend:
