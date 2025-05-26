@@ -14,7 +14,7 @@ proxy-client:
   enabled: true
   replicas: 1
 frontend:
-  enabled: true
+  enabled: false
   replicas: 1
 order-service:
   enabled: true

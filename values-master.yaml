@@ -4,55 +4,33 @@ zipkin:
 cloud-config:
   enabled: true
   replicas: 1
-  env:
-    SPRING_PROFILES_ACTIVE: "prod"
 service-discovery:
   enabled: true
   replicas: 1
-  env:
-    SPRING_PROFILES_ACTIVE: "prod"
 api-gateway:
   enabled: true
   replicas: 1
-  env:
-    SPRING_PROFILES_ACTIVE: "prod"
 proxy-client:
   enabled: true
   replicas: 1
-  env:
-    SPRING_PROFILES_ACTIVE: "prod"
 frontend:
   enabled: true
   replicas: 1
-  env:
-    ENVIRONMENT: "production"
 order-service:
   enabled: true
-  replicas: 1
-  env:
-    SPRING_PROFILES_ACTIVE: "prod"
+  replicas: 2
 payment-service:
   enabled: true
-  replicas: 1
-  env:
-    SPRING_PROFILES_ACTIVE: "prod"
+  replicas: 2
 product-service:
   enabled: true
-  replicas: 1
-  env:
-    SPRING_PROFILES_ACTIVE: "prod"
+  replicas: 2
 shipping-service:
   enabled: true
-  replicas: 1
-  env:
-    SPRING_PROFILES_ACTIVE: "prod"
+  replicas: 2
 user-service:
   enabled: true
-  replicas: 1
-  env:
-    SPRING_PROFILES_ACTIVE: "prod"
+  replicas: 2
 favourite-service:
   enabled: true
-  replicas: 1
-  env:
-    SPRING_PROFILES_ACTIVE: "prod"
+  replicas: 2
