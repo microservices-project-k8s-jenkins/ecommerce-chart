@@ -50,7 +50,7 @@ install_argocd() {
     kubectl apply -n $ARGOCD_NAMESPACE -f https://raw.githubusercontent.com/argoproj/argo-cd/$ARGOCD_VERSION/manifests/install.yaml
     log_info "Waiting for ArgoCD to be ready..."
     kubectl wait --for=condition=available --timeout=600s deployment/argocd-server -n $ARGOCD_NAMESPACE
-    kubectl wait --for=condition=available --timeout=600s deployment/argocd-application-controller -n $ARGOCD_NAMESPACE
+    kubectl wait --for=condition=available --timeout=600s deployment/argocd-applicationset-controller -n $ARGOCD_NAMESPACE
     kubectl wait --for=condition=available --timeout=600s deployment/argocd-repo-server -n $ARGOCD_NAMESPACE
     log_success "ArgoCD installed successfully"
 }
