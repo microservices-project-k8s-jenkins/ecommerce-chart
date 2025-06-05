@@ -1,38 +1,38 @@
 zipkin:
   image:
-    repository: sjbs0212/order-service
+    repository: openzipkin/zipkin
     tag: latest
   enabled: true
   replicas: 1
 cloud-config:
   image:
-    repository: sjbs0212/order-service
+    repository: sjbs0212/cloud-config
     tag: latest
   enabled: true
   replicas: 1
 service-discovery:
   image:
-    repository: sjbs0212/order-service
+    repository: sjbs0212/service-discovery
     tag: latest
   enabled: true
   replicas: 1
 api-gateway:
   image:
-    repository: sjbs0212/order-service
+    repository: sjbs0212/api-gateway
     tag: latest
   enabled: true
   replicas: 1
 proxy-client:
   image:
-    repository: sjbs0212/order-service
-    tag: latest
+    repository: sjbs0212/proxy-client
+    tag: latest                        
   enabled: true
   replicas: 1
 frontend:
   image:
-    repository: sjbs0212/order-service
+    repository: sjbs0212/ecommerce-frontend
     tag: latest
-  enabled: false
+  enabled: true
   replicas: 1
 order-service:
   image:
@@ -42,31 +42,31 @@ order-service:
   replicas: 1
 payment-service:
   image:
-    repository: sjbs0212/order-service
+    repository: sjbs0212/payment-service
     tag: latest
   enabled: true
   replicas: 1
 product-service:
   image:
-    repository: sjbs0212/order-service
+    repository: sjbs0212/product-service
     tag: latest
   enabled: true
   replicas: 1
 shipping-service:
   image:
-    repository: sjbs0212/order-service
+    repository: sjbs0212/shipping-service
     tag: latest
   enabled: true
   replicas: 1
 user-service:
   image:
-    repository: sjbs0212/order-service
+    repository: sjbs0212/user-service
     tag: latest
   enabled: true
   replicas: 1
 favourite-service:
   image:
-    repository: sjbs0212/order-service
+    repository: sjbs0212/favourite-service
     tag: latest
   enabled: true
   replicas: 1
