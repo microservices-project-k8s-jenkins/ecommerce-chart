@@ -20,11 +20,20 @@ spec:
         - containerPort: {{ index .Values "service-discovery" "port" }}
         env:
         - name: SPRING_PROFILES_ACTIVE
-          value: {{ index .Values "service-discovery" "env" "SPRING_PROFILES_ACTIVE" }}
+          valueFrom:
+            configMapKeyRef:
+              name: ecommerce-config
+              key: SPRING_PROFILES_ACTIVE
         - name: SPRING_ZIPKIN_BASE_URL
-          value: {{ index .Values "service-discovery" "env" "SPRING_ZIPKIN_BASE_URL" }}
+          valueFrom:
+            configMapKeyRef:
+              name: ecommerce-config
+              key: SPRING_ZIPKIN_BASE_URL
         - name: SPRING_CONFIG_IMPORT
-          value: {{ index .Values "service-discovery" "env" "SPRING_CONFIG_IMPORT" }}
+          valueFrom:
+            configMapKeyRef:
+              name: ecommerce-config
+              key: SPRING_CONFIG_IMPORT
       initContainers:
       - name: wait-for-dependencies
         image: busybox
