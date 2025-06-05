@@ -47,7 +47,12 @@ check_prerequisites() {
 install_argocd() {
     log_info "Installing ArgoCD..."
     kubectl create namespace $ARGOCD_NAMESPACE --dry-run=client -o yaml | kubectl apply -f -
-    kubectl apply -n $ARGOCD_NAMESPACE -f https://raw.githubusercontent.com/argoproj/argo-cd/$ARGOCD_VERSION/manifests/install.yaml
+    helm repo add argo https://argoproj.github.io/argo-helm
+    helm repo update
+    helm upgrade --install argocd argo/argo-cd \
+    --namespace $ARGOCD_NAMESPACE \
+    --create-namespace \
+    -f ./ecommerce-charts/argocd/values-bootstrap.yaml
     log_info "Waiting for ArgoCD to be ready..."
     kubectl wait --for=condition=available --timeout=600s deployment/argocd-server -n $ARGOCD_NAMESPACE
     kubectl wait --for=condition=available --timeout=600s deployment/argocd-applicationset-controller -n $ARGOCD_NAMESPACE
