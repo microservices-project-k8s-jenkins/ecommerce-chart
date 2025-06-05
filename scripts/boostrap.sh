@@ -98,8 +98,6 @@ EOF
 get_argocd_credentials() {
     log_info "Getting ArgoCD credentials..."
     ARGOCD_PASSWORD=$(kubectl -n $ARGOCD_NAMESPACE get secret argocd-initial-admin-secret -o jsonpath="{.data.password}" | base64 -d)
-    log_info "Setting up port-forward..."
-    kubectl port-forward svc/argocd-server -n $ARGOCD_NAMESPACE 8080:443 > /dev/null 2>&1 &
     PORT_FORWARD_PID=$!
     sleep 5
     echo ""
@@ -114,8 +112,6 @@ get_argocd_credentials() {
     echo "2. Login with the credentials above"
     echo "3. Verify that the 'app-of-apps' application is synced"
     echo "4. Check that your applications are created"
-    echo ""
-    echo "To stop port-forward: kill $PORT_FORWARD_PID"
     echo ""
 }
 
