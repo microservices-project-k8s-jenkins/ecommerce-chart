@@ -1,0 +1,13 @@
+adminPassword: "admin"
+
+service:
+  type: NodePort
+
+datasources:
+  datasources.yaml:
+    apiVersion: 1
+    datasources:
+      - name: Prometheus
+        type: prometheus
+        access: proxy
+        url: http://prometheus-kube-prometheus-prometheus.monitoring.svc.cluster.local:9090
