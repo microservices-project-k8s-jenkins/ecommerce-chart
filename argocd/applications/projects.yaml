@@ -1,0 +1,52 @@
+apiVersion: argoproj.io/v1alpha1
+kind: AppProject
+metadata:
+  name: ecommerce-project
+  namespace: argocd
+spec:
+  description: Ecommerce Microservices Project
+  
+  sourceRepos:
+    - 'https://github.com/microservices-project-k8s-jenkins/ecommerce-charts.git'
+    - 'https://github.com/microservices-project-k8s-jenkins/ecommerce-microservice-backend-app.git'
+  
+  destinations:
+    - namespace: 'ecommerce-*'
+      server: https://kubernetes.default.svc
+    - namespace: argocd
+      server: https://kubernetes.default.svc
+  
+  clusterResourceWhitelist:
+    - group: ''
+      kind: Namespace
+    - group: 'rbac.authorization.k8s.io'
+      kind: ClusterRole
+    - group: 'rbac.authorization.k8s.io'
+      kind: ClusterRoleBinding
+  
+  namespaceResourceWhitelist:
+    - group: ''
+      kind: '*'
+    - group: 'apps'
+      kind: '*'
+    - group: 'networking.k8s.io'
+      kind: '*'
+    - group: 'extensions'
+      kind: '*'
+
+  roles:
+    - name: developer
+      description: Developer access to dev environment
+      policies:
+        - p, proj:ecommerce-project:developer, applications, get, ecommerce-project/*, allow
+        - p, proj:ecommerce-project:developer, applications, sync, ecommerce-project/ecommerce-dev, allow
+      groups:
+        - ecommerce-developers
+    
+    - name: devops
+      description: DevOps full access
+      policies:
+        - p, proj:ecommerce-project:devops, applications, *, ecommerce-project/*, allow
+        - p, proj:ecommerce-project:devops, repositories, *, *, allow
+      groups:
+        - ecommerce-devops
