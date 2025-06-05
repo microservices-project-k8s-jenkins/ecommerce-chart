@@ -55,14 +55,6 @@ install_argocd() {
     log_success "ArgoCD installed successfully"
 }
 
-configure_argocd() {
-    log_info "Configuring ArgoCD..."
-    kubectl apply -f bootstrap/argocd-config.yaml
-    kubectl rollout restart deployment/argocd-server -n $ARGOCD_NAMESPACE
-    kubectl rollout status deployment/argocd-server -n $ARGOCD_NAMESPACE
-    log_success "ArgoCD configured"
-}
-
 create_app_of_apps() {
     log_info "Creating App of Apps..."
     cat <<EOF | kubectl apply -f -
@@ -146,7 +138,6 @@ main() {
     echo ""
     check_prerequisites
     install_argocd
-    configure_argocd
     create_app_of_apps
     verify_installation
     get_argocd_credentials
