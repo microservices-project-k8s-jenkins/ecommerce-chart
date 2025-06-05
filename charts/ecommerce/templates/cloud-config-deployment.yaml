@@ -20,21 +20,52 @@ spec:
         - containerPort: {{ index .Values "cloud-config" "port" }}
         env:
         - name: SPRING_PROFILES_ACTIVE
-          value: {{ index .Values "cloud-config" "env" "SPRING_PROFILES_ACTIVE" }}
+          valueFrom:
+            configMapKeyRef:
+              name: ecommerce-config
+              key: SPRING_PROFILES_ACTIVE
+
         - name: SPRING_ZIPKIN_BASE_URL
-          value: {{ index .Values "cloud-config" "env" "SPRING_ZIPKIN_BASE_URL" }}
+          valueFrom:
+            configMapKeyRef:
+              name: ecommerce-config
+              key: SPRING_ZIPKIN_BASE_URL
+
         - name: EUREKA_CLIENT_REGION
-          value: {{ index .Values "cloud-config" "env" "EUREKA_CLIENT_REGION" }}
+          valueFrom:
+            configMapKeyRef:
+              name: ecommerce-config
+              key: EUREKA_CLIENT_REGION
+
         - name: EUREKA_CLIENT_AVAILABILITYZONES_DEFAULT
-          value: {{ index .Values "cloud-config" "env" "EUREKA_CLIENT_AVAILABILITYZONES_DEFAULT" }}
+          valueFrom:
+            configMapKeyRef:
+              name: ecommerce-config
+              key: EUREKA_CLIENT_AVAILABILITYZONES_DEFAULT
+
         - name: EUREKA_CLIENT_SERVICEURL_MYZONE
-          value: {{ index .Values "cloud-config" "env" "EUREKA_CLIENT_SERVICEURL_MYZONE" }}
+          valueFrom:
+            configMapKeyRef:
+              name: ecommerce-config
+              key: EUREKA_CLIENT_SERVICEURL_MYZONE
+
         - name: EUREKA_CLIENT_SERVICEURL_DEFAULTZONE
-          value: {{ index .Values "cloud-config" "env" "EUREKA_CLIENT_SERVICEURL_DEFAULTZONE" }}
-        - name: EUREKA_INSTANCE_HOSTNAME
-          value: {{ index .Values "cloud-config" "env" "EUREKA_INSTANCE_HOSTNAME" }}
+          valueFrom:
+            configMapKeyRef:
+              name: ecommerce-config
+              key: EUREKA_CLIENT_SERVICEURL_DEFAULTZONE
+
         - name: EUREKA_INSTANCE_PREFER_IP_ADDRESS
-          value: "{{ index .Values "cloud-config" "env" "EUREKA_INSTANCE_PREFER_IP_ADDRESS" }}"
+          valueFrom:
+            configMapKeyRef:
+              name: ecommerce-config
+              key: EUREKA_INSTANCE_PREFER_IP_ADDRESS
+
+        - name: EUREKA_INSTANCE_HOSTNAME
+          valueFrom:
+            configMapKeyRef:
+              name: ecommerce-config
+              key: cloud-config.EUREKA_INSTANCE_HOSTNAME
       initContainers:
       - name: wait-for-dependencies
         image: busybox
