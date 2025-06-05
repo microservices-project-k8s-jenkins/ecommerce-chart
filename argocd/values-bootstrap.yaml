@@ -13,6 +13,7 @@ controller:
               matchLabels:
                 app.kubernetes.io/name: argocd-server
             topologyKey: "kubernetes.io/hostname"
+  priorityClassName: "system-cluster-critical"
 
 repoServer:
   tolerations:
@@ -20,6 +21,7 @@ repoServer:
       operator: "Exists"
       effect: "NoExecute"
       tolerationSeconds: 300
+  priorityClassName: "system-cluster-critical"
 
 applicationSet:
   tolerations:
@@ -27,6 +29,7 @@ applicationSet:
       operator: "Exists"
       effect: "NoExecute"
       tolerationSeconds: 300
+  priorityClassName: "system-cluster-critical"
 
 server:
   tolerations:
@@ -34,3 +37,4 @@ server:
       operator: "Exists"
       effect: "NoExecute"
       tolerationSeconds: 300
+  priorityClassName: "system-cluster-critical"
