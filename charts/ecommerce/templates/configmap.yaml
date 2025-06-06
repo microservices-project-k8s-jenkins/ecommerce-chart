@@ -31,10 +31,10 @@ data:
   # EUREKA_INSTANCE_HOSTNAME
   cloud-config.EUREKA_INSTANCE_HOSTNAME: {{ index .Values "cloud-config" "env" "EUREKA_INSTANCE_HOSTNAME" | quote }}
   api-gateway.EUREKA_INSTANCE_HOSTNAME: {{ index .Values "api-gateway" "env" "EUREKA_INSTANCE_HOSTNAME" | quote }}
-  proxy-client.EUREKA_INSTANCE_HOSTNAME: {{ index .Values "proxy-client" env" "EUREKA_INSTANCE_HOSTNAME" | quote }}
+  proxy-client.EUREKA_INSTANCE_HOSTNAME: {{ index .Values "proxy-client" "env" "EUREKA_INSTANCE_HOSTNAME" | quote }}
   order-service.EUREKA_INSTANCE_HOSTNAME: {{ index .Values "order-service" "env" "EUREKA_INSTANCE_HOSTNAME" | quote }}
   payment-service.EUREKA_INSTANCE_HOSTNAME: {{ index .Values "payment-service" "env" "EUREKA_INSTANCE_HOSTNAME" | quote }}
   product-service.EUREKA_INSTANCE_HOSTNAME: {{ index .Values "product-service" "env" "EUREKA_INSTANCE_HOSTNAME" | quote }}
-  shipping-service.EUREKA_INSTANCE_HOSTNAME: {{ index .Values "shipping-service" env" "EUREKA_INSTANCE_HOSTNAME" | quote }}
+  shipping-service.EUREKA_INSTANCE_HOSTNAME: {{ index .Values "shipping-service" "env" "EUREKA_INSTANCE_HOSTNAME" | quote }}
   user-service.EUREKA_INSTANCE_HOSTNAME: {{ index .Values "user-service" "env" "EUREKA_INSTANCE_HOSTNAME" | quote }}
   favourite-service.EUREKA_INSTANCE_HOSTNAME: {{ index .Values "favourite-service" "env" "EUREKA_INSTANCE_HOSTNAME" | quote }}
