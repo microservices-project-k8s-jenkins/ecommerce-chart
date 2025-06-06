@@ -23,7 +23,7 @@ data:
   EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: {{ index .Values "cloud-config" "env" "EUREKA_CLIENT_SERVICEURL_DEFAULTZONE" | quote }}
   
   # EUREKA_CLIENT_SERVICEURL_DEFAULTZONE de cloud-config, api-gateway, proxy-client, order-service, payment-service, product-service, shipping-service, user-service, favourite-service
-  EUREKA_INSTANCE_PREFER_IP_ADDRESS: "{{ index .Values "cloud-config" "env" "EUREKA_INSTANCE_PREFER_IP_ADDRESS" | quote }}"
+  EUREKA_INSTANCE_PREFER_IP_ADDRESS: {{ index .Values "cloud-config" "env" "EUREKA_INSTANCE_PREFER_IP_ADDRESS" | quote }}
 
   # SPRING_CONFIG_IMPORT de service-discovery, api-gateway, proxy-client, order-service, payment-service, product-service, shipping-service, user-service, favourite-service
   SPRING_CONFIG_IMPORT: {{ index .Values.service-discovery.env "SPRING_CONFIG_IMPORT" | quote }}
