@@ -70,3 +70,6 @@ favourite-service:
     tag: latest
   enabled: true
   replicas: 1
+
+ingress:
+  enabled: false
