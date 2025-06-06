@@ -47,7 +47,7 @@ spec:
         - name: EUREKA_CLIENT_SERVICEURL_DEFAULTZONE
           valueFrom:
             configMapKeyRef:
-              name: Secommerce-config
+              name: ecommerce-config
               key: EUREKA_CLIENT_SERVICEURL_DEFAULTZONE
         - name: SPRING_CONFIG_IMPORT
           valueFrom:
