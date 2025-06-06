@@ -2,24 +2,19 @@ name: Update Image Tags in Helm Chart
 
 on:
   repository_dispatch:
-    types: [update-image-tags] # Must match 'event_type' from the dispatching workflow
+    types: [update-image-tags]
 
 jobs:
   update-chart-values:
     runs-on: ubuntu-latest
     permissions:
-      contents: write # Required to checkout and push changes to this chart repository
+      contents: write
 
     steps:
       - name: Checkout Chart Repository
         uses: actions/checkout@v4
         with:
-          # This PAT (stored as CHARTS_REPO_TOKEN secret in *this* ecommerce-chart repo)
-          # must have write permissions (e.g., 'repo' scope or Fine-Grained 'Contents: Read & Write')
-          # to this 'ecommerce-chart' repository to push the updated values-master.yaml.
           token: ${{ secrets.CHARTS_REPO_TOKEN }}
-          # Optional: Specify the branch to checkout if it's not the default. ArgoCD should watch this branch.
-          # ref: 'main' 
 
       - name: Install yq and jq
         run: |
@@ -42,69 +37,53 @@ jobs:
           ECR_REPOSITORY_NAME="${{ github.event.client_payload.ecr_repository_name }}"
           SERVICES_JSON_STRING='${{ toJSON(github.event.client_payload.services_to_update) }}'
 
-          # Path to your Helm values file within this chart repository
-          VALUES_FILE="charts/ecommerce/values-master.yaml" 
+          # Define VALUES_FILE aquí para este step
+          VALUES_FILE_PATH="charts/ecommerce/values-master.yaml" 
 
-          if [ ! -f "$VALUES_FILE" ]; then
-            echo "Error: Values file '$VALUES_FILE' not found in this repository!"
+          if [ ! -f "$VALUES_FILE_PATH" ]; then
+            echo "Error: Values file '$VALUES_FILE_PATH' not found in this repository!"
             exit 1
           fi
-
-          if [ -z "$ECR_REGISTRY_URI" ] || [ -z "$ECR_REPOSITORY_NAME" ]; then
-            echo "Error: ECR_REGISTRY_URI or ECR_REPOSITORY_NAME is empty in the payload."
-            exit 1
-          fi
-
-          # Construct the full ECR image base path (e.g., ACCOUNT.dkr.ecr.REGION.amazonaws.com/proyectofinallsjecr)
-          FULL_ECR_IMAGE_BASE_PATH="${ECR_REGISTRY_URI}/${ECR_REPOSITORY_NAME}"
-          echo "Constructed Full ECR Image Base Path for Helm values: ${FULL_ECR_IMAGE_BASE_PATH}"
-
-          echo "Services to update listed in payload: $SERVICES_JSON_STRING"
-
-          echo "$SERVICES_JSON_STRING" | jq -r '.[]' | while IFS= read -r service_name; do
-            if [ -z "$service_name" ]; then
-              echo "Warning: Empty service name encountered in payload, skipping."
-              continue
-            fi
-
-            echo "Processing update for service: '$service_name'"
-            
-            # Construct the new image tag for this specific service (e.g., cloud-config-7)
-            NEW_IMAGE_TAG_FOR_SERVICE="${service_name}-${BASE_VERSION_TAG}"
-            
-            # Update the '.image.repository' for the service
-            # yq syntax: yq eval '.service.image.repository = "new_value"' -i file.yaml
-            yq eval ".${service_name}.image.repository = \"${FULL_ECR_IMAGE_BASE_PATH}\"" -i "${VALUES_FILE}"
-            
-            # Update the '.image.tag' for the service
-            yq eval ".${service_name}.image.tag = \"${NEW_IMAGE_TAG_FOR_SERVICE}\"" -i "${VALUES_FILE}"
-            
-            echo "Updated '${service_name}' in '${VALUES_FILE}' to repository '${FULL_ECR_IMAGE_BASE_PATH}' and tag '${NEW_IMAGE_TAG_FOR_SERVICE}'"
-          done
+          # ... (resto de la lógica de actualización usando VALUES_FILE_PATH) ...
+          # Asegúrate de reemplazar todas las instancias de ${VALUES_FILE} con ${VALUES_FILE_PATH} en este script
+          # Ejemplo:
+          yq eval ".${service_name}.image.repository = \"${FULL_ECR_IMAGE_BASE_PATH}\"" -i "${VALUES_FILE_PATH}"
+          yq eval ".${service_name}.image.tag = \"${NEW_IMAGE_TAG_FOR_SERVICE}\"" -i "${VALUES_FILE_PATH}"
+          # ...
+          echo "--- Final ${VALUES_FILE_PATH} content after updates ---"
+          cat "${VALUES_FILE_PATH}"
+          echo "--- End of ${VALUES_FILE_PATH} content ---"
           
-          echo "--- Content of '${VALUES_FILE}' after updates ---"
-          cat "${VALUES_FILE}"
-          echo "--- End of '${VALUES_FILE}' content ---"
+          # Exportar la ruta del archivo para el siguiente step
+          echo "VALUES_FILE_TO_COMMIT=${VALUES_FILE_PATH}" >> $GITHUB_ENV
 
       - name: Commit and Push Changes
+        # Usar la variable de entorno establecida en el step anterior
+        env:
+          VALUES_FILE_FOR_GIT: ${{ env.VALUES_FILE_TO_COMMIT }}
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
 
-          if ! git diff --quiet "${VALUES_FILE}"; then
-            echo "Changes detected in '${VALUES_FILE}'. Committing and pushing..."
-            git add "${VALUES_FILE}"
+          # Añadir un log para verificar el valor de VALUES_FILE_FOR_GIT
+          echo "File path for git operations: '${VALUES_FILE_FOR_GIT}'"
+
+          if [ -z "${VALUES_FILE_FOR_GIT}" ]; then
+            echo "Error: VALUES_FILE_FOR_GIT is empty. Cannot proceed with git operations."
+            exit 1
+          fi
+
+          # Check if there are any changes in the values file
+          if ! git diff --quiet "${VALUES_FILE_FOR_GIT}"; then
+            echo "Changes detected in '${VALUES_FILE_FOR_GIT}'. Committing and pushing..."
+            git add "${VALUES_FILE_FOR_GIT}"
             COMMIT_MESSAGE="Update Helm chart: Image tags to base version ${{ github.event.client_payload.base_version_tag }}
 
-            ECR Base: ${{ github.event.client_payload.ecr_registry_uri }}/${{ github.event.client_payload.ecr_repository_name }}
-            Triggered from: ${{ github.event.client_payload.source_branch }} branch of microservices repo"
+ECR Base: ${{ github.event.client_payload.ecr_registry_uri }}/${{ github.event.client_payload.ecr_repository_name }}
+Triggered from: ${{ github.event.client_payload.source_branch }} branch of microservices repo"
             git commit -m "$COMMIT_MESSAGE"
-            # Ensure the push goes to the branch ArgoCD is monitoring
             git push 
             echo "Changes successfully committed and pushed."
           else
-            echo "No changes detected in '${VALUES_FILE}'. Nothing to commit."
+            echo "No changes detected in '${VALUES_FILE_FOR_GIT}'. Nothing to commit."
           fi
-        env:
-          # This token is used for git push. It's the same CHARTS_REPO_TOKEN secret from this repo.
-          GITHUB_TOKEN: ${{ secrets.CHARTS_REPO_TOKEN }} 
