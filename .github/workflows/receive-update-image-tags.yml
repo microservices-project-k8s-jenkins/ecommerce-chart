@@ -1,0 +1,106 @@
+name: Update Image Tags in Helm Chart
+
+on:
+  repository_dispatch:
+    types: [update-image-tags] # This must match 'event_type' from the dispatching workflow
+
+jobs:
+  update-chart-values:
+    runs-on: ubuntu-latest
+    # Grant permissions for the GITHUB_TOKEN to checkout and write contents.
+    # However, we'll use CHARTS_REPO_TOKEN (a PAT) for more explicit control and cross-repo dispatch scenarios.
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout Chart Repository
+        uses: actions/checkout@v4
+        with:
+          # This token (PAT) must have write permissions to this 'ecommerce-chart' repository
+          # to push the updated values-master.yaml. You've named this secret CHARTS_REPO_TOKEN.
+          token: ${{ secrets.CHARTS_REPO_TOKEN }}
+          # Optional: Specify the branch to checkout if it's not the default branch.
+          # ref: 'main' # Or 'master', or whatever your main branch is called
+
+      - name: Install yq (for YAML processing) and jq (for JSON processing)
+        run: |
+          echo "Installing yq..."
+          sudo wget https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64 -O /usr/local/bin/yq
+          sudo chmod +x /usr/local/bin/yq
+          yq --version
+          echo "Installing jq..."
+          sudo apt-get update && sudo apt-get install -y jq
+          jq --version
+
+      - name: Update Image Details in values-master.yaml
+        id: update_values
+        run: |
+          echo "Received client payload:"
+          echo "${{ toJSON(github.event.client_payload) }}"
+
+          # Extract details from the payload sent by the microservices workflow
+          BASE_VERSION_TAG="${{ github.event.client_payload.base_version_tag }}"
+          ECR_REGISTRY_URI="${{ github.event.client_payload.ecr_registry_uri }}"
+          ECR_REPOSITORY_NAME="${{ github.event.client_payload.ecr_repository_name }}"
+          # The services_to_update comes as a JSON array string, needs to be parsed
+          SERVICES_JSON_STRING='${{ toJSON(github.event.client_payload.services_to_update) }}'
+
+          VALUES_FILE="charts/ecommerce/values-master.yaml" # Path to your Helm values file
+
+          if [ ! -f "$VALUES_FILE" ]; then
+            echo "Error: Values file '$VALUES_FILE' not found!"
+            exit 1
+          fi
+
+          # Construct the full ECR repository path (e.g., ACCOUNT.dkr.ecr.REGION.amazonaws.com/TF_ECR_NAME)
+          FULL_ECR_IMAGE_BASE_PATH="${ECR_REGISTRY_URI}/${ECR_REPOSITORY_NAME}"
+          echo "Full ECR Image Base Path: ${FULL_ECR_IMAGE_BASE_PATH}"
+
+          echo "Services to update: $SERVICES_JSON_STRING"
+
+          # Loop through each service name provided in the payload
+          echo "$SERVICES_JSON_STRING" | jq -r '.[]' | while IFS= read -r service_name; do
+            if [ -z "$service_name" ]; then
+              echo "Warning: Empty service name encountered, skipping."
+              continue
+            fi
+
+            echo "Processing service: $service_name"
+            
+            # Construct the new tag for the service (e.g., cloud-config-7)
+            NEW_IMAGE_TAG="${service_name}-${BASE_VERSION_TAG}"
+            
+            # Update the repository for the service
+            # Example yq command: yq e '.cloud-config.image.repository = "new-repo"' -i file.yaml
+            yq e ".${service_name}.image.repository = \"${FULL_ECR_IMAGE_BASE_PATH}\"" -i "${VALUES_FILE}"
+            
+            # Update the tag for the service
+            # Example yq command: yq e '.cloud-config.image.tag = "new-tag"' -i file.yaml
+            yq e ".${service_name}.image.tag = \"${NEW_IMAGE_TAG}\"" -i "${VALUES_FILE}"
+            
+            echo "Updated '${service_name}' in '${VALUES_FILE}' to repository '${FULL_ECR_IMAGE_BASE_PATH}' and tag '${NEW_IMAGE_TAG}'"
+          done
+          
+          echo "--- Final ${VALUES_FILE} content after updates ---"
+          cat "${VALUES_FILE}"
+          echo "--- End of ${VALUES_FILE} content ---"
+
+      - name: Commit and Push Changes
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+
+          # Check if there are any changes in the values file
+          if ! git diff --quiet "charts/ecommerce/values-master.yaml"; then
+            echo "Changes detected in values-master.yaml. Committing and pushing..."
+            git add "charts/ecommerce/values-master.yaml"
+            COMMIT_MESSAGE="Update image tags to base version ${{ github.event.client_payload.base_version_tag }}
+
+            Services updated for ECR repo: ${{ github.event.client_payload.ecr_registry_uri }}/${{ github.event.client_payload.ecr_repository_name }}
+            Triggered by commit in source branch: ${{ github.event.client_payload.source_branch }}"
+            git commit -m "$COMMIT_MESSAGE"
+            git push
+            echo "Changes pushed to the repository."
+          else
+            echo "No changes detected in values-master.yaml. Nothing to commit."
+          fi
