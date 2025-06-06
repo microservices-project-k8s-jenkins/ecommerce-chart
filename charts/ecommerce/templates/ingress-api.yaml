@@ -3,7 +3,6 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: api-gateway-ingress
-  namespace: default
   annotations:
     kubernetes.io/ingress.class: {{ .Values.ingress.class }}
     cert-manager.io/cluster-issuer: {{ index .Values.ingress.annotations "cert-manager.io/cluster-issuer" }}
