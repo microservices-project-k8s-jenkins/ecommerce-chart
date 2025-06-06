@@ -167,3 +167,17 @@ favourite-service:
     SPRING_CONFIG_IMPORT: "optional:configserver:http://cloud-config:9296/"
     EUREKA_INSTANCE_HOSTNAME: "favourite-service"
     EUREKA_INSTANCE_PREFER_IP_ADDRESS: "false"
+
+certManager:
+  email: luiisapino.28@gmail.com
+
+ingress:
+  class: nginx
+
+domains:
+  api:
+    host: api.lsj-app.xyz
+    tlsSecret: api-gateway-tls
+  frontend:
+    host: lsj-app.xyz
+    tlsSecret: frontend-tls
