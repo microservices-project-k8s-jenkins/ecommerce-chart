@@ -6,26 +6,26 @@ zipkin:
   replicas: 1
 cloud-config:
   image:
-    repository: sjbs0212/cloud-config
-    tag: latest
+    repository: /proyectofinallsjecr
+    tag: cloud-config-11
   enabled: true
   replicas: 1
 service-discovery:
   image:
-    repository: sjbs0212/service-discovery
-    tag: latest
+    repository: /proyectofinallsjecr
+    tag: service-discovery-11
   enabled: true
   replicas: 1
 api-gateway:
   image:
-    repository: sjbs0212/api-gateway
-    tag: latest
+    repository: /proyectofinallsjecr
+    tag: api-gateway-11
   enabled: true
   replicas: 1
 proxy-client:
   image:
-    repository: sjbs0212/proxy-client
-    tag: latest                        
+    repository: /proyectofinallsjecr
+    tag: proxy-client-11
   enabled: true
   replicas: 1
 frontend:
@@ -36,41 +36,40 @@ frontend:
   replicas: 1
 order-service:
   image:
-    repository: sjbs0212/order-service
-    tag: latest
+    repository: /proyectofinallsjecr
+    tag: order-service-11
   enabled: true
   replicas: 1
 payment-service:
   image:
-    repository: sjbs0212/payment-service
-    tag: latest
+    repository: /proyectofinallsjecr
+    tag: payment-service-11
   enabled: true
   replicas: 1
 product-service:
   image:
-    repository: sjbs0212/product-service
-    tag: latest
+    repository: /proyectofinallsjecr
+    tag: product-service-11
   enabled: true
   replicas: 1
 shipping-service:
   image:
-    repository: sjbs0212/shipping-service
-    tag: latest
+    repository: /proyectofinallsjecr
+    tag: shipping-service-11
   enabled: true
   replicas: 1
 user-service:
   image:
-    repository: sjbs0212/user-service
-    tag: latest
+    repository: /proyectofinallsjecr
+    tag: user-service-11
   enabled: true
   replicas: 1
 favourite-service:
   image:
-    repository: sjbs0212/favourite-service
-    tag: latest
+    repository: /proyectofinallsjecr
+    tag: favourite-service-11
   enabled: true
   replicas: 1
-
 ingress:
   enabled: true
   class: nginx
