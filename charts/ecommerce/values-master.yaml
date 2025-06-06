@@ -70,3 +70,17 @@ favourite-service:
     tag: latest
   enabled: true
   replicas: 1
+
+ingress:
+  enabled: true
+  class: nginx
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-prod
+    nginx.ingress.kubernetes.io/rewrite-target: /
+domains:
+  frontend:
+    host: www.lsj-app.xyz
+    tlsSecret: frontend-tls
+  api:
+    host: api.lsj-app.xyz
+    tlsSecret: api-gateway-tls

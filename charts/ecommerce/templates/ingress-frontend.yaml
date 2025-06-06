@@ -1,25 +1,26 @@
+{{- if .Values.ingress.enabled }}
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: frontend-ingress
-  namespace: default
   annotations:
     kubernetes.io/ingress.class: {{ .Values.ingress.class }}
-    cert-manager.io/cluster-issuer: letsencrypt-prod
-    nginx.ingress.kubernetes.io/rewrite-target: /
+    cert-manager.io/cluster-issuer: {{ .Values.ingress.annotations."cert-manager.io/cluster-issuer" }}
+    nginx.ingress.kubernetes.io/rewrite-target: {{ .Values.ingress.annotations."nginx.ingress.kubernetes.io/rewrite-target" }}
 spec:
   tls:
-  - hosts:
-      - {{ .Values.domains.frontend }}
-    secretName: {{ .Values.domains.frontend.tlsSecret }}
+    - hosts:
+        - {{ .Values.domains.frontend.host }}
+      secretName: {{ .Values.domains.frontend.tlsSecret }}
   rules:
-  - host: {{ .Values.domains.frontend }}
-    http:
-      paths:
-        - path: /
-          pathType: Prefix
-          backend:
-            service:
-              name: frontend
-              port:
-                number: 80
+    - host: {{ .Values.domains.frontend.host }}
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: frontend
+                port:
+                  number: 80
+{{- end }}
