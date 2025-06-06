@@ -2,19 +2,21 @@ name: Update Image Tags in Helm Chart
 
 on:
   repository_dispatch:
-    types: [update-image-tags]
+    types: [update-image-tags] # This must match 'event_type' from the dispatching workflow
 
 jobs:
   update-chart-values:
     runs-on: ubuntu-latest
     permissions:
-      contents: write
+      contents: write # Required to checkout and push changes to this chart repository
 
     steps:
       - name: Checkout Chart Repository
         uses: actions/checkout@v4
         with:
-          token: ${{ secrets.CHARTS_REPO_TOKEN }}
+          token: ${{ secrets.CHARTS_REPO_TOKEN }} # PAT with write access to this chart repo
+          # Optional: Specify the branch to checkout if it's not the default. ArgoCD should watch this branch.
+          # ref: 'main' 
 
       - name: Install yq and jq
         run: |
@@ -37,35 +39,67 @@ jobs:
           ECR_REPOSITORY_NAME="${{ github.event.client_payload.ecr_repository_name }}"
           SERVICES_JSON_STRING='${{ toJSON(github.event.client_payload.services_to_update) }}'
 
-          # Define VALUES_FILE aquí para este step
-          VALUES_FILE_PATH="charts/ecommerce/values-master.yaml" 
+          VALUES_FILE_PATH="charts/ecommerce/values-master.yaml"
 
           if [ ! -f "$VALUES_FILE_PATH" ]; then
             echo "Error: Values file '$VALUES_FILE_PATH' not found in this repository!"
             exit 1
           fi
-          # ... (resto de la lógica de actualización usando VALUES_FILE_PATH) ...
-          # Asegúrate de reemplazar todas las instancias de ${VALUES_FILE} con ${VALUES_FILE_PATH} en este script
-          # Ejemplo:
-          yq eval ".${service_name}.image.repository = \"${FULL_ECR_IMAGE_BASE_PATH}\"" -i "${VALUES_FILE_PATH}"
-          yq eval ".${service_name}.image.tag = \"${NEW_IMAGE_TAG_FOR_SERVICE}\"" -i "${VALUES_FILE_PATH}"
-          # ...
-          echo "--- Final ${VALUES_FILE_PATH} content after updates ---"
+
+          if [ -z "$ECR_REGISTRY_URI" ] || [ -z "$ECR_REPOSITORY_NAME" ]; then
+            echo "Error: ECR_REGISTRY_URI or ECR_REPOSITORY_NAME is empty in the payload."
+            exit 1
+          fi
+
+          FULL_ECR_IMAGE_BASE_PATH="${ECR_REGISTRY_URI}/${ECR_REPOSITORY_NAME}"
+          echo "Full ECR Image Base Path for Helm values: ${FULL_ECR_IMAGE_BASE_PATH}"
+          echo "Services to update listed in payload: $SERVICES_JSON_STRING"
+
+          echo "$SERVICES_JSON_STRING" | jq -r '.[]' | while IFS= read -r service_name; do
+            if [ -z "$service_name" ]; then
+              echo "Warning: Empty service name encountered in payload, skipping."
+              continue
+            fi
+
+            echo "Processing update for service: '$service_name'"
+
+            NEW_IMAGE_TAG_FOR_SERVICE="${service_name}-${BASE_VERSION_TAG}"
+
+            YQ_COMMAND_REPO="yq eval \".${service_name}.image.repository = \\\"${FULL_ECR_IMAGE_BASE_PATH}\\\"\" -i \"${VALUES_FILE_PATH}\""
+            echo "Attempting to execute for repository: ${YQ_COMMAND_REPO}"
+            eval "${YQ_COMMAND_REPO}"
+            if [ $? -ne 0 ]; then
+              echo "Error: yq command failed for repository update of service '${service_name}'."
+              echo "Command attempted: ${YQ_COMMAND_REPO}"
+              exit 1
+            fi
+
+            YQ_COMMAND_TAG="yq eval \".${service_name}.image.tag = \\\"${NEW_IMAGE_TAG_FOR_SERVICE}\\\"\" -i \"${VALUES_FILE_PATH}\""
+            echo "Attempting to execute for tag: ${YQ_COMMAND_TAG}"
+            eval "${YQ_COMMAND_TAG}"
+            if [ $? -ne 0 ]; then
+              echo "Error: yq command failed for tag update of service '${service_name}'."
+              echo "Command attempted: ${YQ_COMMAND_TAG}"
+              exit 1
+            fi
+
+            echo "Successfully updated '${service_name}' in '${VALUES_FILE_PATH}' to repository '${FULL_ECR_IMAGE_BASE_PATH}' and tag '${NEW_IMAGE_TAG_FOR_SERVICE}'"
+          done
+
+          echo "--- Final content of '${VALUES_FILE_PATH}' after updates ---"
           cat "${VALUES_FILE_PATH}"
-          echo "--- End of ${VALUES_FILE_PATH} content ---"
-          
-          # Exportar la ruta del archivo para el siguiente step
+          echo "--- End of '${VALUES_FILE_PATH}' content ---"
+
           echo "VALUES_FILE_TO_COMMIT=${VALUES_FILE_PATH}" >> $GITHUB_ENV
 
       - name: Commit and Push Changes
-        # Usar la variable de entorno establecida en el step anterior
         env:
           VALUES_FILE_FOR_GIT: ${{ env.VALUES_FILE_TO_COMMIT }}
+          GITHUB_TOKEN: ${{ secrets.CHARTS_REPO_TOKEN }}
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
 
-          # Añadir un log para verificar el valor de VALUES_FILE_FOR_GIT
           echo "File path for git operations: '${VALUES_FILE_FOR_GIT}'"
 
           if [ -z "${VALUES_FILE_FOR_GIT}" ]; then
@@ -73,7 +107,11 @@ jobs:
             exit 1
           fi
 
-          # Check if there are any changes in the values file
+          if [ ! -f "${VALUES_FILE_FOR_GIT}" ]; then
+            echo "Error: Values file '${VALUES_FILE_FOR_GIT}' not found for git operations."
+            exit 1
+          fi
+
           if ! git diff --quiet "${VALUES_FILE_FOR_GIT}"; then
             echo "Changes detected in '${VALUES_FILE_FOR_GIT}'. Committing and pushing..."
             git add "${VALUES_FILE_FOR_GIT}"
@@ -82,7 +120,7 @@ jobs:
             ECR Base: ${{ github.event.client_payload.ecr_registry_uri }}/${{ github.event.client_payload.ecr_repository_name }}
             Triggered from: ${{ github.event.client_payload.source_branch }} branch of microservices repo"
             git commit -m "$COMMIT_MESSAGE"
-            git push 
+            git push
             echo "Changes successfully committed and pushed."
           else
             echo "No changes detected in '${VALUES_FILE_FOR_GIT}'. Nothing to commit."
