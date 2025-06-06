@@ -79,8 +79,8 @@ jobs:
             git add "${VALUES_FILE_FOR_GIT}"
             COMMIT_MESSAGE="Update Helm chart: Image tags to base version ${{ github.event.client_payload.base_version_tag }}
 
-ECR Base: ${{ github.event.client_payload.ecr_registry_uri }}/${{ github.event.client_payload.ecr_repository_name }}
-Triggered from: ${{ github.event.client_payload.source_branch }} branch of microservices repo"
+            ECR Base: ${{ github.event.client_payload.ecr_registry_uri }}/${{ github.event.client_payload.ecr_repository_name }}
+            Triggered from: ${{ github.event.client_payload.source_branch }} branch of microservices repo"
             git commit -m "$COMMIT_MESSAGE"
             git push 
             echo "Changes successfully committed and pushed."
