@@ -6,26 +6,26 @@ zipkin:
   replicas: 1
 cloud-config:
   image:
-    repository: /proyectofinallsjecr
-    tag: cloud-config-11
+    repository: 468720136030.dkr.ecr.us-east-1.amazonaws.com/proyectofinallsjecr
+    tag: cloud-config-20
   enabled: true
   replicas: 1
 service-discovery:
   image:
-    repository: /proyectofinallsjecr
-    tag: service-discovery-11
+    repository: 468720136030.dkr.ecr.us-east-1.amazonaws.com/proyectofinallsjecr
+    tag: service-discovery-20
   enabled: true
   replicas: 1
 api-gateway:
   image:
-    repository: /proyectofinallsjecr
-    tag: api-gateway-11
+    repository: 468720136030.dkr.ecr.us-east-1.amazonaws.com/proyectofinallsjecr
+    tag: api-gateway-20
   enabled: true
   replicas: 1
 proxy-client:
   image:
-    repository: /proyectofinallsjecr
-    tag: proxy-client-11
+    repository: 468720136030.dkr.ecr.us-east-1.amazonaws.com/proyectofinallsjecr
+    tag: proxy-client-20
   enabled: true
   replicas: 1
 frontend:
@@ -36,38 +36,38 @@ frontend:
   replicas: 1
 order-service:
   image:
-    repository: /proyectofinallsjecr
-    tag: order-service-11
+    repository: 468720136030.dkr.ecr.us-east-1.amazonaws.com/proyectofinallsjecr
+    tag: order-service-20
   enabled: true
   replicas: 1
 payment-service:
   image:
-    repository: /proyectofinallsjecr
-    tag: payment-service-11
+    repository: 468720136030.dkr.ecr.us-east-1.amazonaws.com/proyectofinallsjecr
+    tag: payment-service-20
   enabled: true
   replicas: 1
 product-service:
   image:
-    repository: /proyectofinallsjecr
-    tag: product-service-11
+    repository: 468720136030.dkr.ecr.us-east-1.amazonaws.com/proyectofinallsjecr
+    tag: product-service-20
   enabled: true
   replicas: 1
 shipping-service:
   image:
-    repository: /proyectofinallsjecr
-    tag: shipping-service-11
+    repository: 468720136030.dkr.ecr.us-east-1.amazonaws.com/proyectofinallsjecr
+    tag: shipping-service-20
   enabled: true
   replicas: 1
 user-service:
   image:
-    repository: /proyectofinallsjecr
-    tag: user-service-11
+    repository: 468720136030.dkr.ecr.us-east-1.amazonaws.com/proyectofinallsjecr
+    tag: user-service-20
   enabled: true
   replicas: 1
 favourite-service:
   image:
-    repository: /proyectofinallsjecr
-    tag: favourite-service-11
+    repository: 468720136030.dkr.ecr.us-east-1.amazonaws.com/proyectofinallsjecr
+    tag: favourite-service-20
   enabled: true
   replicas: 1
 ingress:
