@@ -26,7 +26,7 @@ data:
   EUREKA_INSTANCE_PREFER_IP_ADDRESS: {{ index .Values "cloud-config" "env" "EUREKA_INSTANCE_PREFER_IP_ADDRESS" | quote }}
 
   # SPRING_CONFIG_IMPORT de service-discovery, api-gateway, proxy-client, order-service, payment-service, product-service, shipping-service, user-service, favourite-service
-  SPRING_CONFIG_IMPORT: {{ index .Values.service-discovery.env "SPRING_CONFIG_IMPORT" | quote }}
+  SPRING_CONFIG_IMPORT: {{ index .Values "service-discovery" "env" "SPRING_CONFIG_IMPORT" | quote }}
   
   # EUREKA_INSTANCE_HOSTNAME
   cloud-config.EUREKA_INSTANCE_HOSTNAME: {{ index .Values "cloud-config" "env" "EUREKA_INSTANCE_HOSTNAME" | quote }}
