@@ -5,36 +5,36 @@ metadata:
 data:
 
   # SPRING_PROFILES_ACTIVE de cloud-config, service-discovery, api-gateway, proxy-client, order-service, payment-service, product-service, shipping-service, user-service, favourite-service
-  SPRING_PROFILES_ACTIVE: {{ index .Values.cloud-config.env "SPRING_PROFILES_ACTIVE" | quote }}
+  SPRING_PROFILES_ACTIVE: {{ index .Values "cloud-config" "env" "SPRING_PROFILES_ACTIVE" | quote }}
 
   # SPRING_ZIPKIN_BASE_URL de cloud-config, service-discovery, api-gateway, proxy-client, order-service, payment-service, product-service, shipping-service, user-service, favourite-service
-  SPRING_ZIPKIN_BASE_URL: {{ index .Values.cloud-config.env "SPRING_ZIPKIN_BASE_URL" | quote }}
+  SPRING_ZIPKIN_BASE_URL: {{ index .Values "cloud-config" "env" "SPRING_ZIPKIN_BASE_URL" | quote }}
 
   # EUREKA_CLIENT_REGION de cloud-config, api-gateway, proxy-client, order-service, payment-service, product-service, shipping-service, user-service, favourite-service
-  EUREKA_CLIENT_REGION: {{ index .Values.cloud-config.env "EUREKA_CLIENT_REGION" | quote }}
+  EUREKA_CLIENT_REGION: {{ index .Values "cloud-config" "env" "EUREKA_CLIENT_REGION" | quote }}
   
   # EUREKA_CLIENT_AVAILABILITYZONES_DEFAULT de cloud-config, api-gateway, proxy-client, order-service, payment-service, product-service, shipping-service, user-service, favourite-service
-  EUREKA_CLIENT_AVAILABILITYZONES_DEFAULT: {{ index .Values.cloud-config.env "EUREKA_CLIENT_AVAILABILITYZONES_DEFAULT" | quote }}
+  EUREKA_CLIENT_AVAILABILITYZONES_DEFAULT: {{ index .Values "cloud-config" "env" "EUREKA_CLIENT_AVAILABILITYZONES_DEFAULT" | quote }}
   
   # EUREKA_CLIENT_SERVICEURL_MYZONE de cloud-config, api-gateway, proxy-client, order-service, payment-service, product-service, shipping-service, user-service, favourite-service
-  EUREKA_CLIENT_SERVICEURL_MYZONE: {{ index .Values.cloud-config.env "EUREKA_CLIENT_SERVICEURL_MYZONE" | quote }}
+  EUREKA_CLIENT_SERVICEURL_MYZONE: {{ index .Values "cloud-config" "env" "EUREKA_CLIENT_SERVICEURL_MYZONE" | quote }}
   
   # EUREKA_CLIENT_SERVICEURL_DEFAULTZONE de cloud-config, api-gateway, proxy-client, order-service, payment-service, product-service, shipping-service, user-service, favourite-service
-  EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: {{ index .Values.cloud-config.env "EUREKA_CLIENT_SERVICEURL_DEFAULTZONE" | quote }}
+  EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: {{ index .Values "cloud-config" "env" "EUREKA_CLIENT_SERVICEURL_DEFAULTZONE" | quote }}
   
   # EUREKA_CLIENT_SERVICEURL_DEFAULTZONE de cloud-config, api-gateway, proxy-client, order-service, payment-service, product-service, shipping-service, user-service, favourite-service
-  EUREKA_INSTANCE_PREFER_IP_ADDRESS: "{{ index .Values.cloud-config.env "EUREKA_INSTANCE_PREFER_IP_ADDRESS" | quote }}"
+  EUREKA_INSTANCE_PREFER_IP_ADDRESS: "{{ index .Values "cloud-config" "env" "EUREKA_INSTANCE_PREFER_IP_ADDRESS" | quote }}"
 
   # SPRING_CONFIG_IMPORT de service-discovery, api-gateway, proxy-client, order-service, payment-service, product-service, shipping-service, user-service, favourite-service
   SPRING_CONFIG_IMPORT: {{ index .Values.service-discovery.env "SPRING_CONFIG_IMPORT" | quote }}
   
   # EUREKA_INSTANCE_HOSTNAME
-  cloud-config.EUREKA_INSTANCE_HOSTNAME: {{ index .Values.cloud-config.env "EUREKA_INSTANCE_HOSTNAME" | quote }}
-  api-gateway.EUREKA_INSTANCE_HOSTNAME: {{ index .Values.api-gateway.env "EUREKA_INSTANCE_HOSTNAME" | quote }}
-  proxy-client.EUREKA_INSTANCE_HOSTNAME: {{ index .Values.proxy-client.env "EUREKA_INSTANCE_HOSTNAME" | quote }}
-  order-service.EUREKA_INSTANCE_HOSTNAME: {{ index .Values.order-service.env "EUREKA_INSTANCE_HOSTNAME" | quote }}
-  payment-service.EUREKA_INSTANCE_HOSTNAME: {{ index .Values.payment-service.env "EUREKA_INSTANCE_HOSTNAME" | quote }}
-  product-service.EUREKA_INSTANCE_HOSTNAME: {{ index .Values.product-service.env "EUREKA_INSTANCE_HOSTNAME" | quote }}
-  shipping-service.EUREKA_INSTANCE_HOSTNAME: {{ index .Values.shipping-service.env "EUREKA_INSTANCE_HOSTNAME" | quote }}
-  user-service.EUREKA_INSTANCE_HOSTNAME: {{ index .Values.user-service.env "EUREKA_INSTANCE_HOSTNAME" | quote }}
-  favourite-service.EUREKA_INSTANCE_HOSTNAME: {{ index .Values.favourite-service.env "EUREKA_INSTANCE_HOSTNAME" | quote }}
+  cloud-config.EUREKA_INSTANCE_HOSTNAME: {{ index .Values "cloud-config" "env" "EUREKA_INSTANCE_HOSTNAME" | quote }}
+  api-gateway.EUREKA_INSTANCE_HOSTNAME: {{ index .Values "api-gateway" "env" "EUREKA_INSTANCE_HOSTNAME" | quote }}
+  proxy-client.EUREKA_INSTANCE_HOSTNAME: {{ index .Values "proxy-client" env" "EUREKA_INSTANCE_HOSTNAME" | quote }}
+  order-service.EUREKA_INSTANCE_HOSTNAME: {{ index .Values "order-service" "env" "EUREKA_INSTANCE_HOSTNAME" | quote }}
+  payment-service.EUREKA_INSTANCE_HOSTNAME: {{ index .Values "payment-service" "env" "EUREKA_INSTANCE_HOSTNAME" | quote }}
+  product-service.EUREKA_INSTANCE_HOSTNAME: {{ index .Values "product-service" "env" "EUREKA_INSTANCE_HOSTNAME" | quote }}
+  shipping-service.EUREKA_INSTANCE_HOSTNAME: {{ index .Values "shipping-service" env" "EUREKA_INSTANCE_HOSTNAME" | quote }}
+  user-service.EUREKA_INSTANCE_HOSTNAME: {{ index .Values "user-service" "env" "EUREKA_INSTANCE_HOSTNAME" | quote }}
+  favourite-service.EUREKA_INSTANCE_HOSTNAME: {{ index .Values "favourite-service" "env" "EUREKA_INSTANCE_HOSTNAME" | quote }}
