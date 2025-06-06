@@ -6,7 +6,7 @@ metadata:
   namespace: default
   annotations:
     kubernetes.io/ingress.class: {{ .Values.ingress.class }}
-    cert-manager.io/cluster-issuer: {{ .Values.ingress.annotations."cert-manager.io/cluster-issuer" }}
+    cert-manager.io/cluster-issuer: {{ index .Values.ingress.annotations "cert-manager.io/cluster-issuer" }}
     nginx.ingress.kubernetes.io/rewrite-target: /
 spec:
   tls:
