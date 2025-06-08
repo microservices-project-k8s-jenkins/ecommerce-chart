@@ -8,7 +8,6 @@ spec:
       app: shipping-service
   policyTypes:
     - Ingress
-    - Egress
   ingress:
     - from:
         - podSelector:
@@ -17,14 +16,6 @@ spec:
       ports:
         - protocol: TCP
           port: 8600
-  egress:
-    - to:
-        - podSelector:
-            matchLabels:
-              app: order-service
-      ports:
-        - protocol: TCP
-          port: 8300
 ---
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
@@ -36,7 +27,6 @@ spec:
       app: order-service
   policyTypes:
     - Ingress
-    - Egress
   ingress:
     - from:
         - podSelector:
@@ -45,11 +35,3 @@ spec:
       ports:
         - protocol: TCP
           port: 8300
-  egress:
-    - to:
-        - podSelector:
-            matchLabels:
-              app: shipping-service
-      ports:
-        - protocol: TCP
-          port: 8600

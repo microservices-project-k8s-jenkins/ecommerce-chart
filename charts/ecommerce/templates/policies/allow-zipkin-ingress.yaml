@@ -1,0 +1,39 @@
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-zipkin-ingress
+spec:
+  podSelector:
+    matchLabels:
+      app: zipkin
+  policyTypes:
+    - Ingress
+  ingress:
+    - from:
+        - podSelector:
+            matchLabels:
+              app: shipping-service
+        - podSelector:
+            matchLabels:
+              app: product-service
+        - podSelector:
+            matchLabels:
+              app: order-service
+        - podSelector:
+            matchLabels:
+              app: payment-service
+        - podSelector:
+            matchLabels:
+              app: user-service
+        - podSelector:
+            matchLabels:
+              app: favourite-service
+        - podSelector:
+            matchLabels:
+              app: cloud-config
+        - podSelector:
+            matchLabels:
+              app: service-discovery
+      ports:
+        - protocol: TCP
+          port: 9411

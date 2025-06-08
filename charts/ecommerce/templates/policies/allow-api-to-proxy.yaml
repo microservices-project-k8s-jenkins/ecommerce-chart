@@ -1,25 +1,6 @@
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
-  name: allow-api-to-proxy
-spec:
-  podSelector:
-    matchLabels:
-      app: api-gateway
-  policyTypes:
-    - Egress
-  egress:
-    - to:
-        - podSelector:
-            matchLabels:
-              app: proxy-client
-      ports:
-        - protocol: TCP
-          port: 8900
----
-apiVersion: networking.k8s.io/v1
-kind: NetworkPolicy
-metadata:
   name: allow-proxy-from-api
 spec:
   podSelector:
