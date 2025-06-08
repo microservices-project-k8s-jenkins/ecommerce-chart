@@ -26,7 +26,10 @@ spec:
             - name: ENVIRONMENT
               value: "{{ .Values.frontend.env.ENVIRONMENT }}"
             - name: SECRET_TEXT
-              value: "{{ .Values.frontend.env.SECRET_TEXT }}"
+              valueFrom:
+                secretKeyRef:
+                  name: frontend-secret
+                  key: SECRET_TEXT
       initContainers:
       - name: wait-for-api-gateway
         image: busybox
