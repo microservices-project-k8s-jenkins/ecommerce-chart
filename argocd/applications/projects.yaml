@@ -35,6 +35,8 @@ spec:
       kind: '*'
     - group: 'extensions'
       kind: '*'
+    - group: 'autoscaling'
+      kind: '*
 
   roles:
     - name: developer
