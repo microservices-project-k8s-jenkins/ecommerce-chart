@@ -6,26 +6,26 @@ zipkin:
   replicas: 1
 cloud-config:
   image:
-    repository: sjbs0212/cloud-config
-    tag: latest
+    repository: 468720136030.dkr.ecr.us-east-1.amazonaws.com/proyectofinallsjecr
+    tag: cloud-config-dev-25
   enabled: true
   replicas: 1
 service-discovery:
   image:
-    repository: sjbs0212/service-discovery
-    tag: latest
+    repository: 468720136030.dkr.ecr.us-east-1.amazonaws.com/proyectofinallsjecr
+    tag: service-discovery-dev-25
   enabled: true
   replicas: 1
 api-gateway:
   image:
-    repository: sjbs0212/api-gateway
-    tag: latest
+    repository: 468720136030.dkr.ecr.us-east-1.amazonaws.com/proyectofinallsjecr
+    tag: api-gateway-dev-25
   enabled: true
   replicas: 1
 proxy-client:
   image:
-    repository: sjbs0212/proxy-client
-    tag: latest                        
+    repository: 468720136030.dkr.ecr.us-east-1.amazonaws.com/proyectofinallsjecr
+    tag: proxy-client-dev-25
   enabled: true
   replicas: 1
 frontend:
@@ -36,40 +36,39 @@ frontend:
   replicas: 1
 order-service:
   image:
-    repository: sjbs0212/order-service
-    tag: latest
+    repository: 468720136030.dkr.ecr.us-east-1.amazonaws.com/proyectofinallsjecr
+    tag: order-service-dev-25
   enabled: true
   replicas: 1
 payment-service:
   image:
-    repository: sjbs0212/payment-service
-    tag: latest
+    repository: 468720136030.dkr.ecr.us-east-1.amazonaws.com/proyectofinallsjecr
+    tag: payment-service-dev-25
   enabled: true
   replicas: 1
 product-service:
   image:
-    repository: sjbs0212/product-service
-    tag: latest
+    repository: 468720136030.dkr.ecr.us-east-1.amazonaws.com/proyectofinallsjecr
+    tag: product-service-dev-25
   enabled: true
   replicas: 1
 shipping-service:
   image:
-    repository: sjbs0212/shipping-service
-    tag: latest
+    repository: 468720136030.dkr.ecr.us-east-1.amazonaws.com/proyectofinallsjecr
+    tag: shipping-service-dev-25
   enabled: true
   replicas: 1
 user-service:
   image:
-    repository: sjbs0212/user-service
-    tag: latest
+    repository: 468720136030.dkr.ecr.us-east-1.amazonaws.com/proyectofinallsjecr
+    tag: user-service-dev-25
   enabled: true
   replicas: 1
 favourite-service:
   image:
-    repository: sjbs0212/favourite-service
-    tag: latest
+    repository: 468720136030.dkr.ecr.us-east-1.amazonaws.com/proyectofinallsjecr
+    tag: favourite-service-dev-25
   enabled: true
   replicas: 1
-
 ingress:
   enabled: false
