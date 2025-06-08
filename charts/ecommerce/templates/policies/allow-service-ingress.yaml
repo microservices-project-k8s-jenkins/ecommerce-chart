@@ -34,6 +34,12 @@ spec:
         - podSelector:
             matchLabels:
               app: zipkin
+        - podSelector:
+            matchLabels:
+              app: proxy-client
+        - podSelector:
+            matchLabels:
+              app: api-gateway
       ports:
         - protocol: TCP
           port: 8761
