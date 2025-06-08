@@ -71,7 +71,7 @@ frontend:
     API_HOST: "api-gateway"
     API_PORT: "8080"
     ENVIRONMENT: "development"
-    SECRET_TEXT: "This is the secret"
+    SECRET_TEXT: "This_is_the_secret"
 order-service:
   enabled: true
   image:
