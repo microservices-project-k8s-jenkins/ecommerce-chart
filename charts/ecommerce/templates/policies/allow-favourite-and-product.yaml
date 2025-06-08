@@ -1,0 +1,55 @@
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-favourite-and-product
+spec:
+  podSelector:
+    matchLabels:
+      app: favourite-service
+  policyTypes:
+    - Ingress
+    - Egress
+  ingress:
+    - from:
+        - podSelector:
+            matchLabels:
+              app: product-service
+      ports:
+        - protocol: TCP
+          port: 8800
+  egress:
+    - to:
+        - podSelector:
+            matchLabels:
+              app: product-service
+      ports:
+        - protocol: TCP
+          port: 8500
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-product-and-favourite
+spec:
+  podSelector:
+    matchLabels:
+      app: product-service
+  policyTypes:
+    - Ingress
+    - Egress
+  ingress:
+    - from:
+        - podSelector:
+            matchLabels:
+              app: favourite-service
+      ports:
+        - protocol: TCP
+          port: 8500
+  egress:
+    - to:
+        - podSelector:
+            matchLabels:
+              app: favourite-service
+      ports:
+        - protocol: TCP
+          port: 8800
