@@ -6,26 +6,26 @@ zipkin:
   replicas: 1
 cloud-config:
   image:
-    repository: 468720136030.dkr.ecr.us-east-1.amazonaws.com/proyectofinallsjecr
-    tag: cloud-config-dev-25
+    repository: 468720136030.dkr.ecr.us-east-1.amazonaws.com/cloud-config-dev
+    tag: v1.1.0
   enabled: true
   replicas: 1
 service-discovery:
   image:
-    repository: 468720136030.dkr.ecr.us-east-1.amazonaws.com/proyectofinallsjecr
-    tag: service-discovery-dev-25
+    repository: 468720136030.dkr.ecr.us-east-1.amazonaws.com/service-discovery-dev
+    tag: v1.1.0
   enabled: true
   replicas: 1
 api-gateway:
   image:
-    repository: 468720136030.dkr.ecr.us-east-1.amazonaws.com/proyectofinallsjecr
-    tag: api-gateway-dev-25
+    repository: 468720136030.dkr.ecr.us-east-1.amazonaws.com/api-gateway-dev
+    tag: v1.1.0
   enabled: true
   replicas: 1
 proxy-client:
   image:
-    repository: 468720136030.dkr.ecr.us-east-1.amazonaws.com/proyectofinallsjecr
-    tag: proxy-client-dev-25
+    repository: 468720136030.dkr.ecr.us-east-1.amazonaws.com/proxy-client-dev
+    tag: v1.1.0
   enabled: true
   replicas: 1
 frontend:
@@ -36,38 +36,38 @@ frontend:
   replicas: 1
 order-service:
   image:
-    repository: 468720136030.dkr.ecr.us-east-1.amazonaws.com/proyectofinallsjecr
-    tag: order-service-dev-25
+    repository: 468720136030.dkr.ecr.us-east-1.amazonaws.com/order-service-dev
+    tag: v1.1.0
   enabled: true
   replicas: 1
 payment-service:
   image:
-    repository: 468720136030.dkr.ecr.us-east-1.amazonaws.com/proyectofinallsjecr
-    tag: payment-service-dev-25
+    repository: 468720136030.dkr.ecr.us-east-1.amazonaws.com/payment-service-dev
+    tag: v1.1.0
   enabled: true
   replicas: 1
 product-service:
   image:
-    repository: 468720136030.dkr.ecr.us-east-1.amazonaws.com/proyectofinallsjecr
-    tag: product-service-dev-25
+    repository: 468720136030.dkr.ecr.us-east-1.amazonaws.com/product-service-dev
+    tag: v1.1.0
   enabled: true
   replicas: 1
 shipping-service:
   image:
-    repository: 468720136030.dkr.ecr.us-east-1.amazonaws.com/proyectofinallsjecr
-    tag: shipping-service-dev-25
+    repository: 468720136030.dkr.ecr.us-east-1.amazonaws.com/shipping-service-dev
+    tag: v1.1.0
   enabled: true
   replicas: 1
 user-service:
   image:
-    repository: 468720136030.dkr.ecr.us-east-1.amazonaws.com/proyectofinallsjecr
-    tag: user-service-dev-25
+    repository: 468720136030.dkr.ecr.us-east-1.amazonaws.com/user-service-dev
+    tag: v1.1.0
   enabled: true
   replicas: 1
 favourite-service:
   image:
-    repository: 468720136030.dkr.ecr.us-east-1.amazonaws.com/proyectofinallsjecr
-    tag: favourite-service-dev-25
+    repository: 468720136030.dkr.ecr.us-east-1.amazonaws.com/favourite-service-dev
+    tag: v1.1.0
   enabled: true
   replicas: 1
 ingress:
