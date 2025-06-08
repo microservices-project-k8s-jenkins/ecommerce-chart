@@ -1,8 +1,10 @@
-name: Update Image Tags in Helm Chart (Per-Service ECR, SemVer Tags)
+name: Update Helm Chart Image Tags
 
 on:
   repository_dispatch:
-    types: [update-image-tags]
+    types: 
+      - update-image-tags        # Para los microservicios del backend
+      - update-frontend-image-tag # Para el frontend
 
 jobs:
   update-chart-values:
@@ -25,65 +27,92 @@ jobs:
       - name: Update Image Details in Target Values File
         id: update_values
         run: |
-          echo "Received client payload for image update:"
+          echo "Received event: ${{ github.event.action }}" # Será 'update-image-tags' o 'update-frontend-image-tag'
+          echo "Client payload:"
           echo "${{ toJSON(github.event.client_payload) }}"
 
-          # Extraer detalles del payload
-          IMAGE_VERSION_TAG="${{ github.event.client_payload.image_version_tag }}" # e.g., v1.3.4
-          ECR_BASE_URI="${{ github.event.client_payload.ecr_base_uri }}" # e.g., account.dkr.ecr.region.amazonaws.com
-          SERVICES_JSON_STRING='${{ toJSON(github.event.client_payload.services_to_update) }}'
-          TARGET_VALUES_FILE_NAME="${{ github.event.client_payload.target_values_file }}" # e.g., "values-dev.yaml"
-          ENVIRONMENT_NAME="${{ github.event.client_payload.environment_name }}" # e.g., "dev", "stage", "prod"
-
-          if [ -z "$TARGET_VALUES_FILE_NAME" ] || [ -z "$IMAGE_VERSION_TAG" ] || [ -z "$ECR_BASE_URI" ] || [ -z "$ENVIRONMENT_NAME" ]; then
-            echo "::error::Required payload fields (target_values_file, image_version_tag, ecr_base_uri, environment_name) are missing!"
+          TARGET_VALUES_FILE_NAME="${{ github.event.client_payload.target_values_file }}"
+          if [ -z "$TARGET_VALUES_FILE_NAME" ]; then
+            echo "::error::target_values_file not provided in payload!"
             exit 1
           fi
-
-          VALUES_FILE_PATH="charts/ecommerce/${TARGET_VALUES_FILE_NAME}" 
+          VALUES_FILE_PATH="charts/ecommerce/${TARGET_VALUES_FILE_NAME}"
           echo "Target Helm values file to update: ${VALUES_FILE_PATH}"
 
+          # Crear archivo de values si no existe (para dev/stage, desde master)
           if [ ! -f "$VALUES_FILE_PATH" ]; then
             if [[ "$TARGET_VALUES_FILE_NAME" == "values-dev.yaml" || "$TARGET_VALUES_FILE_NAME" == "values-stage.yaml" ]] && [ -f "charts/ecommerce/values-master.yaml" ]; then
               echo "Warning: Values file '$VALUES_FILE_PATH' not found. Creating from 'values-master.yaml'."
               cp "charts/ecommerce/values-master.yaml" "$VALUES_FILE_PATH"
             else
-              echo "::error::Values file '$VALUES_FILE_PATH' not found and cannot be auto-created for this target."
+              echo "::error::Values file '$VALUES_FILE_PATH' not found and cannot be auto-created."
               exit 1
             fi
           fi
+
+          # --- Lógica para Microservicios Backend ---
+          if [[ "${{ github.event.action }}" == "update-image-tags" ]]; then
+            echo "Processing backend microservices update..."
+            IMAGE_VERSION_TAG="${{ github.event.client_payload.image_version_tag }}" # e.g., v1.3.4
+            ECR_BASE_URI="${{ github.event.client_payload.ecr_base_uri }}"
+            SERVICES_JSON_STRING='${{ toJSON(github.event.client_payload.services_to_update) }}'
+            ENVIRONMENT_NAME="${{ github.event.client_payload.environment_name }}"
+
+            if [ -z "$IMAGE_VERSION_TAG" ] || [ -z "$ECR_BASE_URI" ] || [ -z "$ENVIRONMENT_NAME" ]; then
+              echo "::error::Required payload fields for backend update are missing!"
+              exit 1
+            fi
+
+            echo "$SERVICES_JSON_STRING" | jq -r '.[]' | while IFS= read -r service_name; do
+              if [ -z "$service_name" ]; then continue; fi
+              ECR_REPO_NAME_FOR_SERVICE="${service_name}-${ENVIRONMENT_NAME}"
+              FULL_IMAGE_REPO_PATH_IN_ECR="${ECR_BASE_URI}/${ECR_REPO_NAME_FOR_SERVICE}"
+              NEW_IMAGE_TAG="${IMAGE_VERSION_TAG}" 
+              
+              YQ_COMMAND_REPO="yq eval \".${service_name}.image.repository = \\\"${FULL_IMAGE_REPO_PATH_IN_ECR}\\\"\" -i \"${VALUES_FILE_PATH}\""
+              YQ_COMMAND_TAG="yq eval \".${service_name}.image.tag = \\\"${NEW_IMAGE_TAG}\\\"\" -i \"${VALUES_FILE_PATH}\""
+              
+              echo "Backend: Updating ${service_name} repo to ${FULL_IMAGE_REPO_PATH_IN_ECR}"
+              eval "${YQ_COMMAND_REPO}"; if [ $? -ne 0 ]; then echo "::error::yq failed (repo) for ${service_name}"; exit 1; fi
+              echo "Backend: Updating ${service_name} tag to ${NEW_IMAGE_TAG}"
+              eval "${YQ_COMMAND_TAG}"; if [ $? -ne 0 ]; then echo "::error::yq failed (tag) for ${service_name}"; exit 1; fi
+            done
+            echo "Backend microservices update complete for ${VALUES_FILE_PATH}."
+
+          # --- Lógica para Frontend ---
+          elif [[ "${{ github.event.action }}" == "update-frontend-image-tag" ]]; then
+            echo "Processing frontend update..."
+            FRONTEND_IMAGE_REPO="${{ github.event.client_payload.frontend_image_repository }}" # e.g., account.dkr.ecr.region.amazonaws.com/frontend-dev
+            FRONTEND_IMAGE_TAG="${{ github.event.client_payload.image_version_tag }}"     # e.g., v1.2.0
+
+            if [ -z "$FRONTEND_IMAGE_REPO" ] || [ -z "$FRONTEND_IMAGE_TAG" ]; then
+              echo "::error::Required payload fields for frontend update are missing!"
+              exit 1
+            fi
+            
+            YQ_COMMAND_REPO="yq eval \".frontend.image.repository = \\\"${FRONTEND_IMAGE_REPO}\\\"\" -i \"${VALUES_FILE_PATH}\""
+            YQ_COMMAND_TAG="yq eval \".frontend.image.tag = \\\"${FRONTEND_IMAGE_TAG}\\\"\" -i \"${VALUES_FILE_PATH}\""
+
+            echo "Frontend: Updating repository to ${FRONTEND_IMAGE_REPO}"
+            eval "${YQ_COMMAND_REPO}"; if [ $? -ne 0 ]; then echo "::error::yq failed (repo) for frontend"; exit 1; fi
+            echo "Frontend: Updating tag to ${FRONTEND_IMAGE_TAG}"
+            eval "${YQ_COMMAND_TAG}"; if [ $? -ne 0 ]; then echo "::error::yq failed (tag) for frontend"; exit 1; fi
+            echo "Frontend update complete for ${VALUES_FILE_PATH}."
           
-          echo "$SERVICES_JSON_STRING" | jq -r '.[]' | while IFS= read -r service_name; do
-            if [ -z "$service_name" ]; then continue; fi
-            echo "Processing update for service: '$service_name' in file '$VALUES_FILE_PATH'"
-            
-            # Construir el nombre completo del repositorio ECR para este servicio y entorno
-            ECR_REPO_NAME_FOR_SERVICE="${service_name}-${ENVIRONMENT_NAME}"
-            # Construir la ruta completa del repositorio de la imagen en ECR
-            FULL_IMAGE_REPO_PATH_IN_ECR="${ECR_BASE_URI}/${ECR_REPO_NAME_FOR_SERVICE}"
-            # El tag de la imagen es directamente la versión semántica
-            NEW_IMAGE_TAG="${IMAGE_VERSION_TAG}" 
-            
-            YQ_COMMAND_REPO="yq eval \".${service_name}.image.repository = \\\"${FULL_IMAGE_REPO_PATH_IN_ECR}\\\"\" -i \"${VALUES_FILE_PATH}\""
-            YQ_COMMAND_TAG="yq eval \".${service_name}.image.tag = \\\"${NEW_IMAGE_TAG}\\\"\" -i \"${VALUES_FILE_PATH}\""
-            
-            echo "Attempting repo update: ${YQ_COMMAND_REPO}"; eval "${YQ_COMMAND_REPO}"
-            if [ $? -ne 0 ]; then echo "::error::yq command failed for repository update of service '${service_name}'"; exit 1; fi
-            echo "Attempting tag update: ${YQ_COMMAND_TAG}"; eval "${YQ_COMMAND_TAG}"
-            if [ $? -ne 0 ]; then echo "::error::yq command failed for tag update of service '${service_name}'"; exit 1; fi
-            echo "Successfully updated '${service_name}' to repo '${FULL_IMAGE_REPO_PATH_IN_ECR}' and tag '${NEW_IMAGE_TAG}'"
-          done
+          else
+            echo "::warning::Unknown event action: ${{ github.event.action }}. No values updated."
+          fi
           
           echo "--- Final content of '${VALUES_FILE_PATH}' after updates ---"
           cat "${VALUES_FILE_PATH}"
-          echo "--- End of '${VALUES_FILE_PATH}' content ---"
           echo "VALUES_FILE_TO_COMMIT=${VALUES_FILE_PATH}" >> $GITHUB_ENV
 
       - name: Commit and Push Changes
         env:
           VALUES_FILE_FOR_GIT: ${{ env.VALUES_FILE_TO_COMMIT }}
-          EFFECTIVE_BRANCH_FOR_COMMIT: ${{ github.event.client_payload.effective_branch }}
+          EVENT_ACTION_FOR_COMMIT: ${{ github.event.action }} # Para el mensaje de commit
           IMAGE_VERSION_FOR_COMMIT: ${{ github.event.client_payload.image_version_tag }}
+          EFFECTIVE_BRANCH_FOR_COMMIT: ${{ github.event.client_payload.effective_branch }}
           GITHUB_TOKEN: ${{ secrets.CHARTS_REPO_TOKEN }} 
         run: |
           git config --global user.name "github-actions[bot]"
@@ -92,9 +121,10 @@ jobs:
           
           if ! git diff --quiet "${VALUES_FILE_FOR_GIT}"; then
             git add "${VALUES_FILE_FOR_GIT}"
-            COMMIT_MESSAGE="Update Helm chart (${VALUES_FILE_FOR_GIT}): Images to version ${IMAGE_VERSION_FOR_COMMIT}
+            COMMIT_MESSAGE="Update Helm chart (${VALUES_FILE_FOR_GIT}) for ${EVENT_ACTION_FOR_COMMIT}
 
-            Triggered by PR merge to '${EFFECTIVE_BRANCH_FOR_COMMIT}' in microservices repo"
+            Images to version ${IMAGE_VERSION_FOR_COMMIT}
+            Triggered by PR merge to '${EFFECTIVE_BRANCH_FOR_COMMIT}' in source repo"
             git commit -m "$COMMIT_MESSAGE"
             git push 
             echo "Changes successfully committed and pushed to ${VALUES_FILE_FOR_GIT}."
