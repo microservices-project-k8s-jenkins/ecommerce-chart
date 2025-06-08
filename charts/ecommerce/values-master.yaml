@@ -7,25 +7,25 @@ zipkin:
 cloud-config:
   image:
     repository: 468720136030.dkr.ecr.us-east-1.amazonaws.com/proyectofinallsjecr
-    tag: cloud-config-20
+    tag: cloud-config-prod-22
   enabled: true
   replicas: 1
 service-discovery:
   image:
     repository: 468720136030.dkr.ecr.us-east-1.amazonaws.com/proyectofinallsjecr
-    tag: service-discovery-20
+    tag: service-discovery-prod-22
   enabled: true
   replicas: 1
 api-gateway:
   image:
     repository: 468720136030.dkr.ecr.us-east-1.amazonaws.com/proyectofinallsjecr
-    tag: api-gateway-20
+    tag: api-gateway-prod-22
   enabled: true
   replicas: 1
 proxy-client:
   image:
     repository: 468720136030.dkr.ecr.us-east-1.amazonaws.com/proyectofinallsjecr
-    tag: proxy-client-20
+    tag: proxy-client-prod-22
   enabled: true
   replicas: 1
 frontend:
@@ -37,37 +37,37 @@ frontend:
 order-service:
   image:
     repository: 468720136030.dkr.ecr.us-east-1.amazonaws.com/proyectofinallsjecr
-    tag: order-service-20
+    tag: order-service-prod-22
   enabled: true
   replicas: 1
 payment-service:
   image:
     repository: 468720136030.dkr.ecr.us-east-1.amazonaws.com/proyectofinallsjecr
-    tag: payment-service-20
+    tag: payment-service-prod-22
   enabled: true
   replicas: 1
 product-service:
   image:
     repository: 468720136030.dkr.ecr.us-east-1.amazonaws.com/proyectofinallsjecr
-    tag: product-service-20
+    tag: product-service-prod-22
   enabled: true
   replicas: 1
 shipping-service:
   image:
     repository: 468720136030.dkr.ecr.us-east-1.amazonaws.com/proyectofinallsjecr
-    tag: shipping-service-20
+    tag: shipping-service-prod-22
   enabled: true
   replicas: 1
 user-service:
   image:
     repository: 468720136030.dkr.ecr.us-east-1.amazonaws.com/proyectofinallsjecr
-    tag: user-service-20
+    tag: user-service-prod-22
   enabled: true
   replicas: 1
 favourite-service:
   image:
     repository: 468720136030.dkr.ecr.us-east-1.amazonaws.com/proyectofinallsjecr
-    tag: favourite-service-20
+    tag: favourite-service-prod-22
   enabled: true
   replicas: 1
 ingress:
