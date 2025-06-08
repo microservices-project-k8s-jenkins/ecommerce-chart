@@ -1,31 +1,26 @@
-name: Update Image Tags in Helm Chart (Multi-Branch)
+name: Update Image Tags in Helm Chart (Per-Service ECR, SemVer Tags)
 
 on:
   repository_dispatch:
-    types: [update-image-tags] # Must match 'event_type' from the dispatching workflow
+    types: [update-image-tags]
 
 jobs:
   update-chart-values:
     runs-on: ubuntu-latest
     permissions:
-      contents: write # Required to checkout and push changes to this chart repository
+      contents: write
 
     steps:
       - name: Checkout Chart Repository
         uses: actions/checkout@v4
         with:
-          token: ${{ secrets.CHARTS_REPO_TOKEN }} # PAT with write access to this chart repo
-          # ref: 'main' # Or the branch ArgoCD monitors for this chart
+          token: ${{ secrets.CHARTS_REPO_TOKEN }}
 
       - name: Install yq and jq
         run: |
-          echo "Installing yq..."
-          sudo wget https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64 -O /usr/local/bin/yq
-          sudo chmod +x /usr/local/bin/yq
-          echo "yq version: $(yq --version)"
-          echo "Installing jq..."
+          sudo wget https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64 -O /usr/local/bin/yq && sudo chmod +x /usr/local/bin/yq
           sudo apt-get update && sudo apt-get install -y jq
-          echo "jq version: $(jq --version)"
+          echo "yq version: $(yq --version); jq version: $(jq --version)"
 
       - name: Update Image Details in Target Values File
         id: update_values
@@ -33,56 +28,50 @@ jobs:
           echo "Received client payload for image update:"
           echo "${{ toJSON(github.event.client_payload) }}"
 
-          # Extract details from the payload
-          IMAGE_TAG_FOR_SERVICES="${{ github.event.client_payload.image_tag_for_services }}" # e.g., dev-23
-          ECR_REGISTRY_URI="${{ github.event.client_payload.ecr_registry_uri }}"
-          ECR_REPOSITORY_NAME="${{ github.event.client_payload.ecr_repository_name }}"
+          # Extraer detalles del payload
+          IMAGE_VERSION_TAG="${{ github.event.client_payload.image_version_tag }}" # e.g., v1.3.4
+          ECR_BASE_URI="${{ github.event.client_payload.ecr_base_uri }}" # e.g., account.dkr.ecr.region.amazonaws.com
           SERVICES_JSON_STRING='${{ toJSON(github.event.client_payload.services_to_update) }}'
           TARGET_VALUES_FILE_NAME="${{ github.event.client_payload.target_values_file }}" # e.g., "values-dev.yaml"
+          ENVIRONMENT_NAME="${{ github.event.client_payload.environment_name }}" # e.g., "dev", "stage", "prod"
 
-          if [ -z "$TARGET_VALUES_FILE_NAME" ]; then
-            echo "Error: target_values_file not provided in payload!"
-            exit 1
-          fi
-          if [ -z "$IMAGE_TAG_FOR_SERVICES" ]; then
-            echo "Error: image_tag_for_services not provided in payload!"
+          if [ -z "$TARGET_VALUES_FILE_NAME" ] || [ -z "$IMAGE_VERSION_TAG" ] || [ -z "$ECR_BASE_URI" ] || [ -z "$ENVIRONMENT_NAME" ]; then
+            echo "::error::Required payload fields (target_values_file, image_version_tag, ecr_base_uri, environment_name) are missing!"
             exit 1
           fi
 
-          # Construct the full path to the values file within this chart repository
           VALUES_FILE_PATH="charts/ecommerce/${TARGET_VALUES_FILE_NAME}" 
           echo "Target Helm values file to update: ${VALUES_FILE_PATH}"
 
-          # Check if the target values file exists. Create from master if it's for dev/stage and doesn't exist.
           if [ ! -f "$VALUES_FILE_PATH" ]; then
             if [[ "$TARGET_VALUES_FILE_NAME" == "values-dev.yaml" || "$TARGET_VALUES_FILE_NAME" == "values-stage.yaml" ]] && [ -f "charts/ecommerce/values-master.yaml" ]; then
               echo "Warning: Values file '$VALUES_FILE_PATH' not found. Creating from 'values-master.yaml'."
               cp "charts/ecommerce/values-master.yaml" "$VALUES_FILE_PATH"
             else
-              echo "Error: Values file '$VALUES_FILE_PATH' not found and cannot be auto-created for this target."
+              echo "::error::Values file '$VALUES_FILE_PATH' not found and cannot be auto-created for this target."
               exit 1
             fi
           fi
-          
-          FULL_ECR_IMAGE_BASE_PATH="${ECR_REGISTRY_URI}/${ECR_REPOSITORY_NAME}"
-          echo "Full ECR Image Base Path for Helm values: ${FULL_ECR_IMAGE_BASE_PATH}"
           
           echo "$SERVICES_JSON_STRING" | jq -r '.[]' | while IFS= read -r service_name; do
             if [ -z "$service_name" ]; then continue; fi
             echo "Processing update for service: '$service_name' in file '$VALUES_FILE_PATH'"
             
-            # The new image tag for this specific service will be service_name-IMAGE_TAG_FOR_SERVICES
-            # e.g. cloud-config-dev-23
-            NEW_FULL_IMAGE_TAG_FOR_SERVICE="${service_name}-${IMAGE_TAG_FOR_SERVICES}"
+            # Construir el nombre completo del repositorio ECR para este servicio y entorno
+            ECR_REPO_NAME_FOR_SERVICE="${service_name}-${ENVIRONMENT_NAME}"
+            # Construir la ruta completa del repositorio de la imagen en ECR
+            FULL_IMAGE_REPO_PATH_IN_ECR="${ECR_BASE_URI}/${ECR_REPO_NAME_FOR_SERVICE}"
+            # El tag de la imagen es directamente la versión semántica
+            NEW_IMAGE_TAG="${IMAGE_VERSION_TAG}" 
             
-            YQ_COMMAND_REPO="yq eval \".${service_name}.image.repository = \\\"${FULL_ECR_IMAGE_BASE_PATH}\\\"\" -i \"${VALUES_FILE_PATH}\""
-            YQ_COMMAND_TAG="yq eval \".${service_name}.image.tag = \\\"${NEW_FULL_IMAGE_TAG_FOR_SERVICE}\\\"\" -i \"${VALUES_FILE_PATH}\""
+            YQ_COMMAND_REPO="yq eval \".${service_name}.image.repository = \\\"${FULL_IMAGE_REPO_PATH_IN_ECR}\\\"\" -i \"${VALUES_FILE_PATH}\""
+            YQ_COMMAND_TAG="yq eval \".${service_name}.image.tag = \\\"${NEW_IMAGE_TAG}\\\"\" -i \"${VALUES_FILE_PATH}\""
             
             echo "Attempting repo update: ${YQ_COMMAND_REPO}"; eval "${YQ_COMMAND_REPO}"
-            if [ $? -ne 0 ]; then echo "Error on repo update for ${service_name}"; exit 1; fi
+            if [ $? -ne 0 ]; then echo "::error::yq command failed for repository update of service '${service_name}'"; exit 1; fi
             echo "Attempting tag update: ${YQ_COMMAND_TAG}"; eval "${YQ_COMMAND_TAG}"
-            if [ $? -ne 0 ]; then echo "Error on tag update for ${service_name}"; exit 1; fi
-            echo "Successfully updated '${service_name}'"
+            if [ $? -ne 0 ]; then echo "::error::yq command failed for tag update of service '${service_name}'"; exit 1; fi
+            echo "Successfully updated '${service_name}' to repo '${FULL_IMAGE_REPO_PATH_IN_ECR}' and tag '${NEW_IMAGE_TAG}'"
           done
           
           echo "--- Final content of '${VALUES_FILE_PATH}' after updates ---"
@@ -93,19 +82,19 @@ jobs:
       - name: Commit and Push Changes
         env:
           VALUES_FILE_FOR_GIT: ${{ env.VALUES_FILE_TO_COMMIT }}
-          TRIGGER_BRANCH_FOR_COMMIT: ${{ github.event.client_payload.source_trigger_branch }}
-          IMAGE_TAG_FOR_COMMIT: ${{ github.event.client_payload.image_tag_for_services }}
+          EFFECTIVE_BRANCH_FOR_COMMIT: ${{ github.event.client_payload.effective_branch }}
+          IMAGE_VERSION_FOR_COMMIT: ${{ github.event.client_payload.image_version_tag }}
           GITHUB_TOKEN: ${{ secrets.CHARTS_REPO_TOKEN }} 
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
-          if [ -z "${VALUES_FILE_FOR_GIT}" ]; then echo "Error: VALUES_FILE_FOR_GIT is empty."; exit 1; fi
+          if [ -z "${VALUES_FILE_FOR_GIT}" ]; then echo "::error::VALUES_FILE_FOR_GIT is empty."; exit 1; fi
           
           if ! git diff --quiet "${VALUES_FILE_FOR_GIT}"; then
             git add "${VALUES_FILE_FOR_GIT}"
-            COMMIT_MESSAGE="Update Helm chart (${VALUES_FILE_FOR_GIT}): Images to tag base ${IMAGE_TAG_FOR_COMMIT}
+            COMMIT_MESSAGE="Update Helm chart (${VALUES_FILE_FOR_GIT}): Images to version ${IMAGE_VERSION_FOR_COMMIT}
 
-            Triggered from: ${TRIGGER_BRANCH_FOR_COMMIT} branch of microservices repo"
+            Triggered by PR merge to '${EFFECTIVE_BRANCH_FOR_COMMIT}' in microservices repo"
             git commit -m "$COMMIT_MESSAGE"
             git push 
             echo "Changes successfully committed and pushed to ${VALUES_FILE_FOR_GIT}."
