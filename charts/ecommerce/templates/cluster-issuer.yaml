@@ -12,6 +12,9 @@ spec:
     solvers:
     - http01:
         ingress:
-          class: {{ .Values.ingress.class }}
-          pathType: Prefix
+          class: nginx
+          ingressTemplate:
+            metadata:
+              annotations:
+                nginx.ingress.kubernetes.io/rewrite-target: /
 {{- end }}
