@@ -110,24 +110,36 @@ jobs:
       - name: Commit and Push Changes
         env:
           VALUES_FILE_FOR_GIT: ${{ env.VALUES_FILE_TO_COMMIT }}
-          EVENT_ACTION_FOR_COMMIT: ${{ github.event.action }} # Para el mensaje de commit
+          EVENT_ACTION_FOR_COMMIT: ${{ github.event.action }}
           IMAGE_VERSION_FOR_COMMIT: ${{ github.event.client_payload.image_version_tag }}
           EFFECTIVE_BRANCH_FOR_COMMIT: ${{ github.event.client_payload.effective_branch }}
-          GITHUB_TOKEN: ${{ secrets.CHARTS_REPO_TOKEN }} 
+          # CHARTS_REPO_TOKEN es el PAT con permisos de escritura
+          GH_TOKEN: ${{ secrets.CHARTS_REPO_TOKEN }}
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
+
           if [ -z "${VALUES_FILE_FOR_GIT}" ]; then echo "::error::VALUES_FILE_FOR_GIT is empty."; exit 1; fi
-          
+          # Verificar si hay cambios
           if ! git diff --quiet "${VALUES_FILE_FOR_GIT}"; then
+            echo "Changes detected in '${VALUES_FILE_FOR_GIT}'. Committing..."
             git add "${VALUES_FILE_FOR_GIT}"
             COMMIT_MESSAGE="Update Helm chart (${VALUES_FILE_FOR_GIT}) for ${EVENT_ACTION_FOR_COMMIT}
-
             Images to version ${IMAGE_VERSION_FOR_COMMIT}
             Triggered by PR merge to '${EFFECTIVE_BRANCH_FOR_COMMIT}' in source repo"
             git commit -m "$COMMIT_MESSAGE"
-            git push 
-            echo "Changes successfully committed and pushed to ${VALUES_FILE_FOR_GIT}."
+          
+            #  Determinar la rama actual para el push
+            CURRENT_BRANCH=$(git rev-parse --abbrev-ref HEAD)
+            echo "Pushing changes to branch: ${CURRENT_BRANCH}"
+
+            # Modificar la URL del remote para autenticar con el PAT
+            # GITHUB_REPOSITORY es una variable de entorno por defecto, e.g., "owner/repo"
+            # Usamos x-access-token como "usuario" para la autenticación con token
+            REMOTE_URL="https://x-access-token:${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
+            git push "${REMOTE_URL}" "HEAD:${CURRENT_BRANCH}"
+          
+            echo "Changes successfully committed and pushed to ${CURRENT_BRANCH} for ${VALUES_FILE_FOR_GIT}."
           else
             echo "No changes detected in '${VALUES_FILE_FOR_GIT}'. Nothing to commit."
           fi
