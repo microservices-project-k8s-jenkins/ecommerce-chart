@@ -39,3 +39,9 @@ spec:
     name: letsencrypt-prod
     jsonPointers:
     - /spec/acme/solvers/0/http01/ingress/pathType
+  - group: "" # Core API group para Secrets
+    kind: Secret
+    name: frontend-secret # El nombre del Secret que el CronJob modifica
+    namespace: ecommerce-master # El namespace del Secret
+    jsonPointers:
+    - /stringData/SECRET_TEXT # La ruta al campo que el CronJob modifica
