@@ -7,25 +7,25 @@ zipkin:
 cloud-config:
   image:
     repository: 468720136030.dkr.ecr.us-east-1.amazonaws.com/cloud-config-prod
-    tag: v1.2.0
+    tag: v1.1.1
   enabled: true
   replicas: 1
 service-discovery:
   image:
     repository: 468720136030.dkr.ecr.us-east-1.amazonaws.com/service-discovery-prod
-    tag: v1.2.0
+    tag: v1.1.1
   enabled: true
   replicas: 1
 api-gateway:
   image:
     repository: 468720136030.dkr.ecr.us-east-1.amazonaws.com/api-gateway-prod
-    tag: v1.2.0
+    tag: v1.1.1
   enabled: true
   replicas: 1
 proxy-client:
   image:
     repository: 468720136030.dkr.ecr.us-east-1.amazonaws.com/proxy-client-prod
-    tag: v1.2.0
+    tag: v1.1.1
   enabled: true
   replicas: 1
 frontend:
@@ -37,37 +37,37 @@ frontend:
 order-service:
   image:
     repository: 468720136030.dkr.ecr.us-east-1.amazonaws.com/order-service-prod
-    tag: v1.2.0
+    tag: v1.1.1
   enabled: true
   replicas: 1
 payment-service:
   image:
     repository: 468720136030.dkr.ecr.us-east-1.amazonaws.com/payment-service-prod
-    tag: v1.2.0
+    tag: v1.1.1
   enabled: true
   replicas: 1
 product-service:
   image:
     repository: 468720136030.dkr.ecr.us-east-1.amazonaws.com/product-service-prod
-    tag: v1.2.0
+    tag: v1.1.1
   enabled: true
   replicas: 1
 shipping-service:
   image:
     repository: 468720136030.dkr.ecr.us-east-1.amazonaws.com/shipping-service-prod
-    tag: v1.2.0
+    tag: v1.1.1
   enabled: true
   replicas: 1
 user-service:
   image:
     repository: 468720136030.dkr.ecr.us-east-1.amazonaws.com/user-service-prod
-    tag: v1.2.0
+    tag: v1.1.1
   enabled: true
   replicas: 1
 favourite-service:
   image:
     repository: 468720136030.dkr.ecr.us-east-1.amazonaws.com/favourite-service-prod
-    tag: v1.2.0
+    tag: v1.1.1
   enabled: true
   replicas: 1
 ingress:
