@@ -32,3 +32,10 @@ spec:
         duration: 10s
         factor: 2
         maxDuration: 5m
+
+  ignoreDifferences:
+  - group: cert-manager.io
+    kind: ClusterIssuer
+    name: letsencrypt-prod
+    jsonPointers:
+    - /spec/acme/solvers/0/http01/ingress/pathType
