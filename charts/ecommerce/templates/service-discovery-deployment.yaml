@@ -34,6 +34,16 @@ spec:
             configMapKeyRef:
               name: ecommerce-config
               key: SPRING_CONFIG_IMPORT
+        - name: JAVA_TOOL_OPTIONS
+          value: "-XX:MaxRAMPercentage=75.0"
+          
+        resources:
+          requests:
+            cpu: "250m"
+            memory: "512Mi"
+          limits:
+            cpu: "1000m"
+            memory: "1Gi"
       initContainers:
       - name: wait-for-dependencies
         image: busybox

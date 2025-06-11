@@ -66,6 +66,17 @@ spec:
             configMapKeyRef:
               name: ecommerce-config
               key: cloud-config.EUREKA_INSTANCE_HOSTNAME
+
+        - name: JAVA_TOOL_OPTIONS
+          value: "-XX:MaxRAMPercentage=75.0"
+          
+        resources:
+          requests:
+            cpu: "250m"
+            memory: "512Mi"
+          limits:
+            cpu: "1000m"
+            memory: "1Gi"
       initContainers:
       - name: wait-for-dependencies
         image: busybox
