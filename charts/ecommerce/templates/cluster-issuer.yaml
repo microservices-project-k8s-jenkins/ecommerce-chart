@@ -16,16 +16,9 @@ spec:
           ingressTemplate:
             metadata:
               annotations:
+                nginx.ingress.kubernetes.io/ssl-redirect: "false"
+                nginx.ingress.kubernetes.io/use-regex: "true"
                 nginx.ingress.kubernetes.io/rewrite-target: /
             spec:
-              rules:
-              - http:
-                  paths:
-                  - path: /.well-known/acme-challenge
-                    pathType: Prefix
-                    backend:
-                      service:
-                        name: challenge-solver
-                        port:
-                          number: 8089
+              pathType: Prefix
 {{- end }}
