@@ -83,3 +83,6 @@ domains:
   api:
     host: api.lsj-app.xyz
     tlsSecret: api-gateway-tls
+certManager:
+  email: luiisapino.28@gmail.com
+  enabled: true
