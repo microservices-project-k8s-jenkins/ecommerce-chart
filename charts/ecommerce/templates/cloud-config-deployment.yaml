@@ -69,10 +69,10 @@ spec:
 
         - name: JAVA_TOOL_OPTIONS
           value: "-XX:MaxRAMPercentage=75.0"
-          
+
         resources:
           requests:
-            cpu: "250m"
+            cpu: "100m"
             memory: "512Mi"
           limits:
             cpu: "1000m"
