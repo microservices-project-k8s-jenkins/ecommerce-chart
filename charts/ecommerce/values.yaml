@@ -171,3 +171,4 @@ favourite-service:
 
 certManager:
   email: luiisapino.28@gmail.com
+  enabled: false
