@@ -13,4 +13,5 @@ spec:
     - http01:
         ingress:
           class: {{ .Values.ingress.class }}
+          pathType: ImplementationSpecific
 {{- end }}
