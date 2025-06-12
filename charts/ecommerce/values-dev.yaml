@@ -30,8 +30,8 @@ proxy-client:
   replicas: 1
 frontend:
   image:
-    repository: 468720136030.dkr.ecr.us-east-1.amazonaws.com/frontend-dev
-    tag: v1.1.0
+    repository: 211125706306.dkr.ecr.us-east-1.amazonaws.com/frontend-dev
+    tag: v1.3.0
   enabled: true
   replicas: 1
 order-service:
