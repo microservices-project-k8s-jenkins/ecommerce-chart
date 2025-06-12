@@ -39,6 +39,10 @@ spec:
       kind: '*'
     - group: 'autoscaling'
       kind: '*'
+    - group: 'batch'               
+      kind: '*'                    # <--- Permite CronJob, Job
+    - group: 'rbac.authorization.k8s.io'
+      kind: '*' 
 
   roles:
     - name: developer
