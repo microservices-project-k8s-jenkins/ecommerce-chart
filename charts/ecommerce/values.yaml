@@ -73,7 +73,7 @@ frontend:
     ENVIRONMENT: "development"
     SECRET_TEXT: "default-secret-if-not-overridden"
 
-frontendDeploymentName:"frontend"
+frontendDeploymentName: "frontend"
 
 frontendSecretRotation:
   enabled: true
