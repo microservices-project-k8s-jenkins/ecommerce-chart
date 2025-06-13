@@ -74,6 +74,24 @@ spec:
             limits:
               cpu: "1000m"
               memory: "1Gi"
+
+          livenessProbe:
+            httpGet:
+              path: /user-service/actuator/health
+              port: {{ index .Values "user-service" "port" }}
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            timeoutSeconds: 5
+            failureThreshold: 3
+
+          readinessProbe:
+            httpGet:
+              path: /user-service/actuator/health
+              port: {{ index .Values "user-service" "port" }}
+            initialDelaySeconds: 10
+            periodSeconds: 5
+            timeoutSeconds: 5
+            failureThreshold: 3
       initContainers:
         - name: wait-for-dependencies
           image: busybox
