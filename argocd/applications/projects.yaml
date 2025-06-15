@@ -17,6 +17,8 @@ spec:
       server: https://kubernetes.default.svc
     - namespace: 'elastic-stack'
       server: https://kubernetes.default.svc
+    - namespace: 'linkerd'
+      server: https://kubernetes.default.svc
   
   clusterResourceWhitelist:
     - group: ''
