@@ -11,25 +11,10 @@ spec:
   ingress:
     - from:
       - podSelector: {}
+    - from:
+      - namespaceSelector: {}
+      ports:
+        - protocol: TCP
+          port: 9995
   egress:
-    - to:
-      - podSelector: {}
-    - to:
-      - namespaceSelector:
-          matchLabels:
-            kubernetes.io/metadata.name: kube-system
-      ports:
-        - protocol: TCP
-          port: 443
-    - to:
-      - namespaceSelector:
-          matchLabels:
-            kubernetes.io/metadata.name: kube-system
-        podSelector:
-          matchLabels:
-            k8s-app: kube-dns
-      ports:
-        - protocol: UDP
-          port: 53
-        - protocol: TCP
-          port: 53
+    - {}
