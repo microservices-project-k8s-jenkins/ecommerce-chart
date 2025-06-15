@@ -18,6 +18,9 @@ spec:
   destination:
     server: https://kubernetes.default.svc
     namespace: ecommerce-master
+  namespaceMetadata:
+    labels:
+      linkerd.io/inject: enabled
   syncPolicy:
     automated:
       prune: true
