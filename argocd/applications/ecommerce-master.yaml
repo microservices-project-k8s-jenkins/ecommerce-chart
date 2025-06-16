@@ -18,9 +18,6 @@ spec:
   destination:
     server: https://kubernetes.default.svc
     namespace: ecommerce-master
-  namespaceMetadata:
-    labels:
-      linkerd.io/inject: enabled
   syncPolicy:
     automated:
       prune: true
@@ -29,6 +26,10 @@ spec:
     syncOptions:
       - CreateNamespace=true
       - PrunePropagationPolicy=foreground
+    managedNamespaceMetadata:
+      labels:
+        linkerd.io/inject: enabled
+        environment: master
     retry:
       limit: 3
       backoff:
@@ -42,9 +43,9 @@ spec:
     name: letsencrypt-prod
     jsonPointers:
     - /spec/acme/solvers/0/http01/ingress/pathType
-  - group: "" # Core API group para Secrets
+  - group: ""
     kind: Secret
-    name: frontend-secret # El nombre del Secret que el CronJob modifica
-    namespace: ecommerce-master # El namespace del Secret
+    name: frontend-secret
+    namespace: ecommerce-master
     jsonPointers:
-    - /data/SECRET_TEXT # La ruta al campo que el CronJob modifica
+    - /data/SECRET_TEXT

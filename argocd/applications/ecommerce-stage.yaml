@@ -26,6 +26,9 @@ spec:
     syncOptions:
       - CreateNamespace=true
       - PrunePropagationPolicy=foreground
+    managedNamespaceMetadata:
+      labels:
+        environment: stage
     retry:
       limit: 3
       backoff:
