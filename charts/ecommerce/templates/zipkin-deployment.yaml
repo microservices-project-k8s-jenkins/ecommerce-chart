@@ -10,6 +10,10 @@ spec:
       app: zipkin
   template:
     metadata:
+      {{- with .Values.frontend.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
       labels:
         app: zipkin
     spec:

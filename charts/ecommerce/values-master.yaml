@@ -1,70 +1,94 @@
 zipkin:
+  podAnnotations:
+      linkerd.io/inject: enabled
   image:
     repository: openzipkin/zipkin
     tag: latest
   enabled: true
   replicas: 1
 cloud-config:
+  podAnnotations:
+      linkerd.io/inject: enabled
   image:
     repository: 211125706306.dkr.ecr.us-east-1.amazonaws.com/cloud-config-prod
     tag: v1.3.0
   enabled: true
   replicas: 1
 service-discovery:
+  podAnnotations:
+      linkerd.io/inject: enabled
   image:
     repository: 211125706306.dkr.ecr.us-east-1.amazonaws.com/service-discovery-prod
     tag: v1.3.0
   enabled: true
   replicas: 1
 api-gateway:
+  podAnnotations:
+      linkerd.io/inject: enabled
   image:
     repository: 211125706306.dkr.ecr.us-east-1.amazonaws.com/api-gateway-prod
     tag: v1.3.0
   enabled: true
   replicas: 1
 proxy-client:
+  podAnnotations:
+      linkerd.io/inject: enabled
   image:
     repository: 211125706306.dkr.ecr.us-east-1.amazonaws.com/proxy-client-prod
     tag: v1.3.0
   enabled: true
   replicas: 1
 frontend:
+  podAnnotations:
+      linkerd.io/inject: enabled
   image:
     repository: 211125706306.dkr.ecr.us-east-1.amazonaws.com/frontend-prod
     tag: v1.5.0
   enabled: true
   replicas: 1
 order-service:
+  podAnnotations:
+      linkerd.io/inject: enabled
   image:
     repository: 211125706306.dkr.ecr.us-east-1.amazonaws.com/order-service-prod
     tag: v1.3.0
   enabled: true
   replicas: 1
 payment-service:
+  podAnnotations:
+      linkerd.io/inject: enabled
   image:
     repository: 211125706306.dkr.ecr.us-east-1.amazonaws.com/payment-service-prod
     tag: v1.3.0
   enabled: true
   replicas: 1
 product-service:
+  podAnnotations:
+      linkerd.io/inject: enabled
   image:
     repository: 211125706306.dkr.ecr.us-east-1.amazonaws.com/product-service-prod
     tag: v1.3.0
   enabled: true
   replicas: 1
 shipping-service:
+  podAnnotations:
+      linkerd.io/inject: enabled
   image:
     repository: 211125706306.dkr.ecr.us-east-1.amazonaws.com/shipping-service-prod
     tag: v1.3.0
   enabled: true
   replicas: 1
 user-service:
+  podAnnotations:
+      linkerd.io/inject: enabled
   image:
     repository: 211125706306.dkr.ecr.us-east-1.amazonaws.com/user-service-prod
     tag: v1.3.0
   enabled: true
   replicas: 1
 favourite-service:
+  podAnnotations:
+      linkerd.io/inject: enabled
   image:
     repository: 211125706306.dkr.ecr.us-east-1.amazonaws.com/favourite-service-prod
     tag: v1.3.0

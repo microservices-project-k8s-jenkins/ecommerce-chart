@@ -1,10 +1,12 @@
 zipkin:
+  podAnnotations: {}
   enabled: true
   image:
     repository: openzipkin/zipkin
     tag: latest
   port: 9411
 cloud-config:
+  podAnnotations: {}
   enabled: true
   image:
     repository: sjbs0212/cloud-config
@@ -20,6 +22,7 @@ cloud-config:
     EUREKA_INSTANCE_HOSTNAME: "cloud-config"
     EUREKA_INSTANCE_PREFER_IP_ADDRESS: "false"
 service-discovery:
+  podAnnotations: {}
   enabled: true
   image:
     repository: sjbs0212/service-discovery
@@ -30,6 +33,7 @@ service-discovery:
     SPRING_ZIPKIN_BASE_URL: "http://zipkin:9411"
     SPRING_CONFIG_IMPORT: "optional:configserver:http://cloud-config:9296/"
 api-gateway:
+  podAnnotations: {}
   enabled: true
   image:
     repository: sjbs0212/api-gateway
@@ -46,6 +50,7 @@ api-gateway:
     EUREKA_INSTANCE_HOSTNAME: "api-gateway"
     EUREKA_INSTANCE_PREFER_IP_ADDRESS: "false"
 proxy-client:
+  podAnnotations: {}
   enabled: true
   image:
     repository: sjbs0212/proxy-client
@@ -62,6 +67,7 @@ proxy-client:
     EUREKA_INSTANCE_HOSTNAME: "proxy-client"
     EUREKA_INSTANCE_PREFER_IP_ADDRESS: "false"
 frontend:
+  podAnnotations: {}
   enabled: true
   image:
     repository: sjbs0212/ecommerce-frontend
@@ -84,6 +90,7 @@ frontendSecretRotation:
   baseSecretValue: "default-secret-if-not-overridden" # El prefijo que se mantendrá
 
 order-service:
+  podAnnotations: {}
   enabled: true
   image:
     repository: sjbs0212/order-service
@@ -100,6 +107,7 @@ order-service:
     EUREKA_INSTANCE_HOSTNAME: "order-service"
     EUREKA_INSTANCE_PREFER_IP_ADDRESS: "false"
 payment-service:
+  podAnnotations: {}
   enabled: true
   image:
     repository: sjbs0212/payment-service
@@ -116,6 +124,7 @@ payment-service:
     EUREKA_INSTANCE_HOSTNAME: "payment-service"
     EUREKA_INSTANCE_PREFER_IP_ADDRESS: "false"
 product-service:
+  podAnnotations: {}
   enabled: true
   image:
     repository: sjbs0212/product-service
@@ -132,6 +141,7 @@ product-service:
     EUREKA_INSTANCE_HOSTNAME: "product-service"
     EUREKA_INSTANCE_PREFER_IP_ADDRESS: "false"
 shipping-service:
+  podAnnotations: {}
   enabled: true
   image:
     repository: sjbs0212/shipping-service
@@ -148,6 +158,7 @@ shipping-service:
     EUREKA_INSTANCE_HOSTNAME: "shipping-service"
     EUREKA_INSTANCE_PREFER_IP_ADDRESS: "false"
 user-service:
+  podAnnotations: {}
   enabled: true
   image:
     repository: sjbs0212/user-service
@@ -164,6 +175,7 @@ user-service:
     EUREKA_INSTANCE_HOSTNAME: "user-service"
     EUREKA_INSTANCE_PREFER_IP_ADDRESS: "false"
 favourite-service:
+  podAnnotations: {}
   enabled: true
   image:
     repository: sjbs0212/favourite-service

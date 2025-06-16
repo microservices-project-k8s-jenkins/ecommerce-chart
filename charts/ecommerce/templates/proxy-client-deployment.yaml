@@ -10,6 +10,10 @@ spec:
       app: proxy-client
   template:
     metadata:
+      {{- with .Values.frontend.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
       labels:
         app: proxy-client
     spec:

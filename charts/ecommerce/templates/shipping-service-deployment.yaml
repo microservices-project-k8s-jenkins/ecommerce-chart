@@ -10,6 +10,10 @@ spec:
       app: shipping-service
   template:
     metadata:
+      {{- with .Values.frontend.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
       labels:
         app: shipping-service
     spec:

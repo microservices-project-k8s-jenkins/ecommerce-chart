@@ -10,6 +10,10 @@ spec:
       app: user-service
   template:
     metadata:
+      {{- with .Values.frontend.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
       labels:
         app: user-service
     spec:

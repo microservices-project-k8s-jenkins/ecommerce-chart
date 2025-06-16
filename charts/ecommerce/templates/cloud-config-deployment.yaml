@@ -10,6 +10,10 @@ spec:
       app: cloud-config
   template:
     metadata:
+      {{- with .Values.frontend.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
       labels:
         app: cloud-config
     spec:

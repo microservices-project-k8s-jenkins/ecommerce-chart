@@ -10,6 +10,10 @@ spec:
       app: api-gateway
   template:
     metadata:
+      {{- with .Values.frontend.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
       labels:
         app: api-gateway
     spec:
@@ -70,7 +74,7 @@ spec:
 
         resources:
           requests:
-            cpu: "50m"
+            cpu: "100m"
             memory: "512Mi"
           limits:
             cpu: "1000m"
